@@ -4,8 +4,18 @@ export interface StorageArea {
   remove(keys: string | string[]): Promise<void>;
 }
 
+export interface StorageChange {
+  oldValue?: unknown;
+  newValue?: unknown;
+}
+
+export interface StorageChangeEvent {
+  addListener(listener: (changes: Record<string, StorageChange>, areaName: string) => void): void;
+  removeListener?(listener: (changes: Record<string, StorageChange>, areaName: string) => void): void;
+}
+
 export interface ExtensionApi {
-  storage?: { local?: StorageArea };
+  storage?: { local?: StorageArea; onChanged?: StorageChangeEvent };
   i18n?: {
     getMessage(messageName: string, substitutions?: string | string[]): string;
     getUILanguage?(): string;
