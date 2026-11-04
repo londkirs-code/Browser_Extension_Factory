@@ -284,7 +284,7 @@ async function main(): Promise<void> {
     slug: answers.slug,
     displayName: answers.displayName,
     description: answers.description,
-    geckoId: `${answers.slug}-${randomUUID()}@browser-extension-factory.invalid`,
+    geckoId: `${randomUUID()}@browser-extension-factory.invalid`,
     permissions: answers.permissions,
     optionalPermissions: answers.optionalPermissions,
     hostPermissions: answers.hostPermissions,
