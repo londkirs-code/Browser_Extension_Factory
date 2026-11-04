@@ -16,9 +16,7 @@ const config = JSON.parse(
   readFileSync(new URL("./extension.config.json", import.meta.url), "utf8"),
 ) as ExtensionConfig;
 
-export default defineConfig((context) => {
-  const browser = context?.browser ?? "chrome";
-  return {
+export default defineConfig({
     srcDir: ".",
     outDir: ".output",
     targetBrowsers: ["chrome", "firefox"],
@@ -27,7 +25,7 @@ export default defineConfig((context) => {
       sourcesTemplate: "{{name}}-{{version}}-sources.zip",
       compressionLevel: 9,
     },
-    manifest: {
+    manifest: ({ browser }) => ({
       name: "__MSG_extName__",
       description: "__MSG_extDescription__",
       default_locale: "en",
@@ -57,5 +55,4 @@ export default defineConfig((context) => {
             ...(config.chromeKey ? { key: config.chromeKey } : {}),
           }),
     },
-  };
 });
