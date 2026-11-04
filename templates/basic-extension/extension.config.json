@@ -5,7 +5,7 @@
   "geckoId": "basic-extension@browser-extension-factory.invalid",
   "chromeKey": "",
   "minChromeVersion": "120.0.0",
-  "minFirefoxVersion": "128.0",
+  "minFirefoxVersion": "142.0",
   "permissions": [],
   "optionalPermissions": [],
   "hostPermissions": [],
@@ -19,7 +19,9 @@
     "background": true
   },
   "firefoxDataCollectionPermissions": {
-    "required": ["none"],
+    "required": [
+      "none"
+    ],
     "optional": []
   }
 }

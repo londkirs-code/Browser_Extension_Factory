@@ -15,7 +15,7 @@ pnpm new
 3. הרשאות API חובה והרשאות אופציונליות.
 4. האם ליצור popup, options page, content script ו־background service worker.
 5. הרשאות host חובה ואופציונליות, וכן match patterns ל־content script כאשר נבחר.
-6. קטגוריות מידע ש־Firefox צריך להצהיר עליהן כאשר התוסף מעביר נתונים מחוץ לתוסף. השארת שתי הרשימות ריקות מגדירה במפורש `required: ["none"]`.
+6. קטגוריות מידע ש־Firefox צריך להצהיר עליהן כאשר התוסף מעביר נתונים מחוץ לתוסף. השארת שתי הרשימות ריקות מגדירה במפורש `required: ["none"]`. בגלל דרישת data collection של Firefox MV3, התבנית קובעת מינימום Firefox 142.0 כדי לתמוך גם ב־Firefox Android.
 
 בחר הרשאות מצומצמות ככל האפשר. אם נבחרה הרשאה רחבה כגון `<all_urls>`, `tabs`, `debugger` או host pattern רחב, האשף מבקש הצדקה ושומר אותה ב־`extension.config.json`.
 

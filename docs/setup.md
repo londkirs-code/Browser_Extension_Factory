@@ -55,7 +55,7 @@ pnpm build hello-factory
 pnpm zip hello-factory
 ```
 
-הפקודה `pnpm build hello-factory` בונה גם Chrome/Chromium וגם Firefox, בודקת את שני ה־manifests ומריצה Firefox `web-ext lint`.
+הפקודה `pnpm build hello-factory` בונה גם Chrome/Chromium וגם Firefox, בודקת את שני ה־manifests ומריצה Firefox `web-ext lint`. התבנית דורשת Firefox 142 ומעלה כדי לתמוך בהצהרת איסוף הנתונים של MV3 גם ב־Firefox Android.
 
 ## הערת audit זמנית
 
