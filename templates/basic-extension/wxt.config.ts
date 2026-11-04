@@ -56,5 +56,5 @@ export default defineConfig({
             minimum_chrome_version: config.minChromeVersion,
             ...(config.chromeKey ? { key: config.chromeKey } : {}),
           }),
-    },
+    }),
 });
