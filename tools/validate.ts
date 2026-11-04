@@ -20,7 +20,7 @@ const secretPatterns = [
 ];
 
 type ExtensionConfig = {
-  slug: string; displayName: string; description: string; geckoId: string; version: string;
+  slug: string; displayName: string; description: string; geckoId: string;
   minChromeVersion: string; minFirefoxVersion: string;
   permissions: string[]; optionalPermissions: string[];
   hostPermissions: string[]; optionalHostPermissions: string[];
@@ -82,12 +82,12 @@ async function validateIcons(extensionDir: string): Promise<void> {
   }
 }
 
-async function validateManifest(extensionDir: string, config: ExtensionConfig, browser: "chrome" | "firefox"): Promise<void> {
+async function validateManifest(extensionDir: string, config: ExtensionConfig, packageVersion: string, browser: "chrome" | "firefox"): Promise<void> {
   const outputDir = path.join(extensionDir, ".output", browser === "chrome" ? "chrome-mv3" : "firefox-mv3");
   const manifestPath = path.join(outputDir, "manifest.json");
   const manifest = JSON.parse(await readFile(manifestPath, "utf8")) as Record<string, unknown>;
   if (manifest.manifest_version !== 3) throw new Error(browser + ": manifest_version must be 3.");
-  if (manifest.version !== config.version) throw new Error(browser + ": generated version differs from extension.config.json.");
+  if (manifest.version !== packageVersion) throw new Error(browser + ": generated version differs from package.json.");
 
   const csp = manifest.content_security_policy as { extension_pages?: string } | undefined;
   const policy = csp?.extension_pages ?? "";
@@ -129,7 +129,6 @@ export async function validateExtension(slug: string, options: { requireBuilt?: 
   if (!packageJson.version || !/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(packageJson.version)) {
     throw new Error("Each extension needs an independent semantic version in package.json.");
   }
-  if (config.version !== packageJson.version) throw new Error("extension.config.json version must match package.json.");
   if (!config.geckoId || !config.geckoId.includes("@")) throw new Error("A unique Firefox Gecko ID is required.");
   if (!Array.isArray(config.permissions) || !Array.isArray(config.optionalPermissions)) {
     throw new Error("Required and optional API permission arrays must be present.");
@@ -148,8 +147,8 @@ export async function validateExtension(slug: string, options: { requireBuilt?: 
     catch { if (enabled) throw new Error("Selected entrypoint is missing: " + relativePath); }
   }
   if (options.requireBuilt) {
-    await validateManifest(extensionDir, config, "chrome");
-    await validateManifest(extensionDir, config, "firefox");
+    await validateManifest(extensionDir, config, packageJson.version, "chrome");
+    await validateManifest(extensionDir, config, packageJson.version, "firefox");
   }
 }
 
