@@ -53,7 +53,9 @@ jobs:
       - name: Install workspace dependencies
         run: pnpm install --frozen-lockfile
       - name: Validate selected extension
-        run: pnpm exec tsx tools/validate.ts "${{ inputs.extension }}"
+        env:
+          EXTENSION_SLUG: ${{ inputs.extension }}
+        run: pnpm exec tsx tools/validate.ts "$EXTENSION_SLUG"
       - name: Publish to Chrome Web Store
         if: inputs.browser == 'chrome' || inputs.browser == 'both'
         env:
@@ -62,10 +64,13 @@ jobs:
           CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
           CHROME_PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
           CHROME_EXTENSION_ID: ${{ inputs.chrome_extension_id || secrets.CHROME_EXTENSION_ID }}
-        run: pnpm publish:chrome "${{ inputs.extension }}"
+          EXTENSION_SLUG: ${{ inputs.extension }}
+        run: pnpm publish:chrome "$EXTENSION_SLUG"
       - name: Sign or submit to AMO
         if: inputs.browser == 'firefox' || inputs.browser == 'both'
         env:
           AMO_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}
           AMO_JWT_SECRET: ${{ secrets.AMO_JWT_SECRET }}
-        run: pnpm sign:firefox "${{ inputs.extension }}" --channel "${{ inputs.firefox_channel }}"
+          EXTENSION_SLUG: ${{ inputs.extension }}
+          FIREFOX_CHANNEL: ${{ inputs.firefox_channel }}
+        run: pnpm sign:firefox "$EXTENSION_SLUG" --channel "$FIREFOX_CHANNEL"
