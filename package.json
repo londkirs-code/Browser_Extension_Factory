@@ -27,7 +27,7 @@
     "publish:firefox": "tsx tools/cli.ts publish:firefox"
   },
   "devDependencies": {
-    "@eslint/js": "^10.14.0",
+    "@eslint/js": "^10.0.1",
     "@types/node": "^26.0.0",
     "eslint": "^10.14.0",
     "fflate": "^0.8.2",
