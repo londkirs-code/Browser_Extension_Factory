@@ -15,6 +15,7 @@ pnpm new
 3. הרשאות API חובה והרשאות אופציונליות.
 4. האם ליצור popup, options page, content script ו־background service worker.
 5. הרשאות host חובה ואופציונליות, וכן match patterns ל־content script כאשר נבחר.
+6. קטגוריות מידע ש־Firefox צריך להצהיר עליהן כאשר התוסף מעביר נתונים מחוץ לתוסף. השארת שתי הרשימות ריקות מגדירה במפורש `required: ["none"]`.
 
 בחר הרשאות מצומצמות ככל האפשר. אם נבחרה הרשאה רחבה כגון `<all_urls>`, `tabs`, `debugger` או host pattern רחב, האשף מבקש הצדקה ושומר אותה ב־`extension.config.json`.
 
@@ -36,13 +37,13 @@ pnpm new -- --slug reading-helper --name "Reading Helper" --description "A short
 - `--no-popup`, `--no-options`, `--no-content-script`, `--no-background` — השבתת entrypoint.
 - `--help` — הצגת תחביר.
 
-הערכים `--permissions`, `--optional-permissions`, `--host-permissions` ו־`--content-matches` מקבלים רשימה מופרדת בפסיקים.
+הערכי `--permissions`, `--optional-permissions`, `--host-permissions`, `--content-matches`, `--firefox-data-collection-required` ו־`--firefox-data-collection-optional` מקבלים רשימה מופרדת בפסיקים. רשימות הנתונים מקבלות את הערכים המוגדרים ב־Mozilla; ברירת המחדל היא `none` ב־required ו־רשימה ריקה ב־optional.
 
 ## מה מתקבל
 
 `extensions/<slug>/` כולל:
 
-- `wxt.config.ts` ו־`extension.config.json` עבור שני הדפדפנים.
+- `wxt.config.ts` ו־`extension.config.json` עבור שני הדפדפנים, כולל `gecko.data_collection_permissions` חובה ב־Firefox MV3.
 - `browser_specific_settings.gecko.id` ו־`strict_min_version` של Firefox.
 - `minimum_chrome_version` של Chromium.
 - CSP קשיח, הרשאות מינימליות ואפשרות ל־Chrome `key` קבוע.

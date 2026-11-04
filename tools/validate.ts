@@ -19,6 +19,20 @@ const broadPermissions = new Set([
   "clipboardRead",
   "clipboardWrite",
 ]);
+const firefoxDataTypes = new Set([
+  "authenticationInfo",
+  "bookmarksInfo",
+  "browsingActivity",
+  "financialAndPaymentInfo",
+  "healthInfo",
+  "locationInfo",
+  "personalCommunications",
+  "personallyIdentifyingInfo",
+  "searchTerms",
+  "technicalAndInteraction",
+  "websiteActivity",
+  "websiteContent",
+]);
 const textExtensions = new Set([
   ".ts",
   ".tsx",
@@ -54,6 +68,7 @@ type ExtensionConfig = {
   hostPermissions: string[];
   optionalHostPermissions: string[];
   permissionJustifications: Record<string, string>;
+  firefoxDataCollectionPermissions: { required: string[]; optional: string[] };
   features: { popup: boolean; options: boolean; contentScript: boolean; background: boolean };
 };
 
@@ -178,11 +193,25 @@ async function validateManifest(
 
   if (browser === "firefox") {
     const settings = manifest.browser_specific_settings as
-      { gecko?: { id?: string; strict_min_version?: string } } | undefined;
+      { gecko?: { id?: string; strict_min_version?: string; data_collection_permissions?: { required?: string[]; optional?: string[] } } } | undefined;
     if (settings?.gecko?.id !== config.geckoId)
       throw new Error("Firefox manifest has an incorrect or missing Gecko ID.");
     if (settings.gecko.strict_min_version !== config.minFirefoxVersion)
       throw new Error("Firefox minimum version is inconsistent.");
+    const actualDataPermissions = settings.gecko.data_collection_permissions;
+    if (!actualDataPermissions || !Array.isArray(actualDataPermissions.required)) {
+      throw new Error("Firefox MV3 manifest is missing gecko.data_collection_permissions.required.");
+    }
+    const expectedRequired = [...config.firefoxDataCollectionPermissions.required].sort();
+    const expectedOptional = [...config.firefoxDataCollectionPermissions.optional].sort();
+    const actualRequired = [...actualDataPermissions.required].sort();
+    const actualOptional = [...(actualDataPermissions.optional ?? [])].sort();
+    if (JSON.stringify(actualRequired) !== JSON.stringify(expectedRequired)) {
+      throw new Error("Firefox data_collection_permissions.required does not match extension.config.json.");
+    }
+    if (JSON.stringify(actualOptional) !== JSON.stringify(expectedOptional)) {
+      throw new Error("Firefox data_collection_permissions.optional does not match extension.config.json.");
+    }
   } else if (manifest.minimum_chrome_version !== config.minChromeVersion) {
     throw new Error("Chromium minimum version is inconsistent.");
   }
@@ -213,6 +242,24 @@ export async function validateExtension(
     throw new Error("Required and optional API permission arrays must be present.");
   }
   validatePermissionJustifications(config);
+  const dataPermissions = config.firefoxDataCollectionPermissions;
+  if (!dataPermissions || !Array.isArray(dataPermissions.required) || !Array.isArray(dataPermissions.optional)) {
+    throw new Error("Firefox data collection permissions must declare required and optional arrays.");
+  }
+  if (dataPermissions.required.length === 0) {
+    throw new Error('Firefox required data categories must contain "none" or one or more data types.');
+  }
+  if (dataPermissions.required.includes("none") && dataPermissions.required.length !== 1) {
+    throw new Error('Firefox data category "none" cannot be combined with other required categories.');
+  }
+  if (dataPermissions.optional.includes("none")) {
+    throw new Error('Firefox optional data categories cannot contain "none".');
+  }
+  for (const dataType of [...dataPermissions.required, ...dataPermissions.optional]) {
+    if (dataType !== "none" && !firefoxDataTypes.has(dataType)) {
+      throw new Error("Unsupported Firefox data collection category: " + dataType);
+    }
+  }
   await validateIcons(extensionDir);
 
   const requiredEntrypoints: Array<[boolean, string]> = [

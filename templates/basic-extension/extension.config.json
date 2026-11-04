@@ -17,5 +17,11 @@
     "options": false,
     "contentScript": false,
     "background": true
+  },
+  "firefoxDataCollectionPermissions": {
+    "required": [
+      "none"
+    ],
+    "optional": []
   }
 }

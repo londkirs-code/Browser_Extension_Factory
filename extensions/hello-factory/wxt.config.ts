@@ -10,6 +10,7 @@ type ExtensionConfig = {
   optionalPermissions: string[];
   hostPermissions: string[];
   optionalHostPermissions: string[];
+  firefoxDataCollectionPermissions: { required: string[]; optional: string[] };
 };
 const config = JSON.parse(
   readFileSync(new URL("./extension.config.json", import.meta.url), "utf8"),
@@ -39,7 +40,16 @@ export default defineConfig((context) => {
       ...(browser === "firefox"
         ? {
             browser_specific_settings: {
-              gecko: { id: config.geckoId, strict_min_version: config.minFirefoxVersion },
+              gecko: {
+                id: config.geckoId,
+                strict_min_version: config.minFirefoxVersion,
+                data_collection_permissions: {
+                  required: config.firefoxDataCollectionPermissions.required,
+                  ...(config.firefoxDataCollectionPermissions.optional.length
+                    ? { optional: config.firefoxDataCollectionPermissions.optional }
+                    : {}),
+                },
+              },
             },
           }
         : {

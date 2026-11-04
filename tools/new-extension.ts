@@ -19,6 +19,7 @@ type Answers = {
   optionalHostPermissions: string[];
   contentScriptMatches: string[];
   permissionJustifications: Record<string, string>;
+  firefoxDataCollectionPermissions: { required: string[]; optional: string[] };
   features: Features;
 };
 type CliOptions = Record<string, string | boolean>;
@@ -124,6 +125,42 @@ async function collectAnswers(options: CliOptions): Promise<Answers> {
       "Optional API permissions",
       listOption(options, "optional-permissions"),
     );
+    const allowedFirefoxDataTypes = new Set([
+      "authenticationInfo",
+      "bookmarksInfo",
+      "browsingActivity",
+      "financialAndPaymentInfo",
+      "healthInfo",
+      "locationInfo",
+      "personalCommunications",
+      "personallyIdentifyingInfo",
+      "searchTerms",
+      "technicalAndInteraction",
+      "websiteActivity",
+      "websiteContent",
+    ]);
+    const firefoxRequiredDataTypes = await askList(
+      "Firefox required data collection categories (blank means none)",
+      listOption(options, "firefox-data-collection-required"),
+    );
+    const firefoxOptionalDataTypes = await askList(
+      "Firefox optional data collection categories (blank means none)",
+      listOption(options, "firefox-data-collection-optional"),
+    );
+    const requiredFirefoxData = firefoxRequiredDataTypes.length
+      ? firefoxRequiredDataTypes
+      : ["none"];
+    if (requiredFirefoxData.includes("none") && requiredFirefoxData.length !== 1) {
+      throw new Error('Firefox data category "none" cannot be combined with other required categories.');
+    }
+    for (const dataType of [...requiredFirefoxData, ...firefoxOptionalDataTypes]) {
+      if (dataType !== "none" && !allowedFirefoxDataTypes.has(dataType)) {
+        throw new Error("Unsupported Firefox data collection category: " + dataType);
+      }
+    }
+    if (firefoxOptionalDataTypes.includes("none")) {
+      throw new Error('Firefox optional data categories cannot contain "none".');
+    }
     const features: Features = {
       popup: await askBoolean("Create popup page?", booleanOption(options, "popup"), true),
       options: await askBoolean("Create options page?", booleanOption(options, "options"), false),
@@ -188,6 +225,10 @@ async function collectAnswers(options: CliOptions): Promise<Answers> {
       optionalHostPermissions,
       contentScriptMatches,
       permissionJustifications,
+      firefoxDataCollectionPermissions: {
+        required: requiredFirefoxData,
+        optional: firefoxOptionalDataTypes,
+      },
       features,
     };
   } finally {
@@ -219,7 +260,7 @@ async function main(): Promise<void> {
   const options = parseArguments(process.argv.slice(2));
   if (options.help === true) {
     output.write(
-      'Usage: pnpm new --slug my-extension --name "My Extension" --description "Description" [--permissions storage] [--popup true --options false --content-script false --background true]\n',
+      'Usage: pnpm new --slug my-extension --name "My Extension" --description "Description" [--permissions storage] [--firefox-data-collection-required none] [--firefox-data-collection-optional technicalAndInteraction] [--popup true --options false --content-script false --background true]\n',
     );
     return;
   }
@@ -248,6 +289,7 @@ async function main(): Promise<void> {
     optionalHostPermissions: answers.optionalHostPermissions,
     contentScriptMatches: answers.contentScriptMatches,
     permissionJustifications: answers.permissionJustifications,
+    firefoxDataCollectionPermissions: answers.firefoxDataCollectionPermissions,
     features: answers.features,
   });
   await writeFile(configPath, `${JSON.stringify(config, null, 2)}\n`, "utf8");

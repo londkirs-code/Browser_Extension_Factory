@@ -75,8 +75,8 @@ async function buildOne(slug: string): Promise<void> {
   await generateIconsForExtension(directory);
   await validateExtension(slug);
   console.log("Building " + slug + " for Chrome/Chromium and Firefox.");
-  runWxt(slug, ["build", "-b", "chrome"]);
-  runWxt(slug, ["build", "-b", "firefox"]);
+  runWxt(slug, ["build", "-b", "chrome", "--mv3"]);
+  runWxt(slug, ["build", "-b", "firefox", "--mv3"]);
   await validateExtension(slug, { requireBuilt: true });
   const firefoxOutput = path.join(directory, ".output", "firefox-mv3");
   runPnpm(["exec", "web-ext", "lint", "--source-dir", firefoxOutput, "--warnings-as-errors"]);
@@ -93,8 +93,8 @@ async function zipOne(
   slug: string,
 ): Promise<{ chromeZip: string; firefoxZip: string; sourceZip: string }> {
   await buildOne(slug);
-  runWxt(slug, ["zip", "-b", "chrome"]);
-  runWxt(slug, ["zip", "-b", "firefox"]);
+  runWxt(slug, ["zip", "-b", "chrome", "--mv3"]);
+  runWxt(slug, ["zip", "-b", "firefox", "--mv3"]);
   const directory = extensionDirectory(slug);
   const zips = await findFiles(path.join(directory, ".output"), ".zip");
   const chromeZip = zips.find((file) => /chrome/i.test(path.basename(file)));
@@ -191,7 +191,7 @@ async function main(): Promise<void> {
   if (command === "dev" || command === "dev:firefox") {
     await generateIconsForExtension(directory);
     await validateExtension(slug);
-    runWxt(slug, ["-b", command === "dev:firefox" ? "firefox" : "chrome"]);
+    runWxt(slug, ["-b", command === "dev:firefox" ? "firefox" : "chrome", "--mv3"]);
   } else if (command === "build") {
     await buildOne(slug);
   } else if (command === "zip") {
