@@ -1,0 +1,1 @@
+Demonstration browser extension with a popup storage example and a scoped content script.
