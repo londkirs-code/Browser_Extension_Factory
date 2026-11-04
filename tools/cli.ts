@@ -94,7 +94,9 @@ async function zipOne(
 ): Promise<{ chromeZip: string; firefoxZip: string; sourceZip: string }> {
   await buildOne(slug);
   const outputDirectory = path.join(extensionDirectory(slug), ".output");
-  await Promise.all((await findFiles(outputDirectory, ".zip")).map((file) => rm(file, { force: true })));
+  await Promise.all(
+    (await findFiles(outputDirectory, ".zip")).map((file) => rm(file, { force: true })),
+  );
   runWxt(slug, ["zip", "-b", "chrome", "--mv3"]);
   runWxt(slug, ["zip", "-b", "firefox", "--mv3"]);
   const directory = extensionDirectory(slug);
@@ -149,7 +151,9 @@ async function signFirefox(slug: string, channel: "listed" | "unlisted"): Promis
   runPnpm(args, env);
   const xpis = await findFiles(artifactsDir, ".xpi");
   if (!xpis.length) throw new Error("web-ext completed without producing a signed XPI.");
-  const packageJson = JSON.parse(await readFile(path.join(directory, "package.json"), "utf8")) as { version: string };
+  const packageJson = JSON.parse(await readFile(path.join(directory, "package.json"), "utf8")) as {
+    version: string;
+  };
   const namedXpi = path.join(artifactsDir, slug + "-" + packageJson.version + ".xpi");
   if (path.resolve(xpis[0]!) !== path.resolve(namedXpi)) await copyFile(xpis[0]!, namedXpi);
   console.log("Signed Firefox XPI: " + namedXpi);
