@@ -13,14 +13,23 @@ const pnpm = process.platform === "win32" ? "pnpm.cmd" : "pnpm";
 
 function run(command: string, args: string[], env: NodeJS.ProcessEnv = process.env): void {
   const result = spawnSync(command, args, {
-    cwd: rootDir, env, stdio: "inherit", shell: process.platform === "win32",
+    cwd: rootDir,
+    env,
+    stdio: "inherit",
+    shell: process.platform === "win32",
   });
   if (result.error) throw result.error;
-  if (result.status !== 0) throw new Error("Command failed (" + (result.status ?? "signal") + "): " + command + " " + args.join(" "));
+  if (result.status !== 0)
+    throw new Error(
+      "Command failed (" + (result.status ?? "signal") + "): " + command + " " + args.join(" "),
+    );
 }
-function runPnpm(args: string[], env: NodeJS.ProcessEnv = process.env): void { run(pnpm, args, env); }
+function runPnpm(args: string[], env: NodeJS.ProcessEnv = process.env): void {
+  run(pnpm, args, env);
+}
 function extensionDirectory(slug: string): string {
-  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) throw new Error("A valid extension slug is required.");
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug))
+    throw new Error("A valid extension slug is required.");
   return path.join(rootDir, "extensions", slug);
 }
 function runWxt(slug: string, args: string[]): void {
@@ -28,7 +37,10 @@ function runWxt(slug: string, args: string[]): void {
 }
 async function listSlugs(): Promise<string[]> {
   const entries = await readdir(path.join(rootDir, "extensions"), { withFileTypes: true });
-  return entries.filter((entry) => entry.isDirectory()).map((entry) => entry.name).sort();
+  return entries
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => entry.name)
+    .sort();
 }
 async function directoryBytes(directory: string): Promise<number> {
   let total = 0;
@@ -45,11 +57,15 @@ function formatBytes(bytes: number): string {
 }
 async function findFiles(directory: string, suffix: string): Promise<string[]> {
   let entries;
-  try { entries = await readdir(directory, { withFileTypes: true }); } catch { return []; }
+  try {
+    entries = await readdir(directory, { withFileTypes: true });
+  } catch {
+    return [];
+  }
   const found: string[] = [];
   for (const entry of entries) {
     const absolute = path.join(directory, entry.name);
-    if (entry.isDirectory()) found.push(...await findFiles(absolute, suffix));
+    if (entry.isDirectory()) found.push(...(await findFiles(absolute, suffix)));
     else if (entry.name.endsWith(suffix)) found.push(absolute);
   }
   return found;
@@ -65,11 +81,17 @@ async function buildOne(slug: string): Promise<void> {
   const firefoxOutput = path.join(directory, ".output", "firefox-mv3");
   runPnpm(["exec", "web-ext", "lint", "--source-dir", firefoxOutput, "--warnings-as-errors"]);
   for (const browser of ["chrome", "firefox"]) {
-    const output = path.join(directory, ".output", browser === "chrome" ? "chrome-mv3" : "firefox-mv3");
+    const output = path.join(
+      directory,
+      ".output",
+      browser === "chrome" ? "chrome-mv3" : "firefox-mv3",
+    );
     console.log(slug + " " + browser + " bundle: " + formatBytes(await directoryBytes(output)));
   }
 }
-async function zipOne(slug: string): Promise<{ chromeZip: string; firefoxZip: string; sourceZip: string }> {
+async function zipOne(
+  slug: string,
+): Promise<{ chromeZip: string; firefoxZip: string; sourceZip: string }> {
   await buildOne(slug);
   runWxt(slug, ["zip", "-b", "chrome"]);
   runWxt(slug, ["zip", "-b", "firefox"]);
@@ -85,7 +107,9 @@ async function zipOne(slug: string): Promise<{ chromeZip: string; firefoxZip: st
   return { chromeZip, firefoxZip, sourceZip };
 }
 function optionValue(args: string[], name: string, fallback: string): string {
-  const argument = args.find((value) => value === "--" + name || value.startsWith("--" + name + "="));
+  const argument = args.find(
+    (value) => value === "--" + name || value.startsWith("--" + name + "="),
+  );
   if (!argument) return fallback;
   if (argument.includes("=")) return argument.slice(argument.indexOf("=") + 1);
   const index = args.indexOf(argument);
@@ -102,7 +126,18 @@ async function signFirefox(slug: string, channel: "listed" | "unlisted"): Promis
   if (!env.WEB_EXT_API_KEY || !env.WEB_EXT_API_SECRET) {
     throw new Error("Set AMO_JWT_ISSUER and AMO_JWT_SECRET in the environment.");
   }
-  const args = ["exec", "web-ext", "sign", "--source-dir", sourceDir, "--artifacts-dir", artifactsDir, "--channel", channel, "--no-input"];
+  const args = [
+    "exec",
+    "web-ext",
+    "sign",
+    "--source-dir",
+    sourceDir,
+    "--artifacts-dir",
+    artifactsDir,
+    "--channel",
+    channel,
+    "--no-input",
+  ];
   if (channel === "listed") {
     const sourceZip = await createSourcePackage(slug);
     const amoMetadata = path.join(directory, "store", "amo-metadata.json");
@@ -118,8 +153,12 @@ async function signFirefox(slug: string, channel: "listed" | "unlisted"): Promis
 async function publishChrome(slug: string): Promise<void> {
   const packages = await zipOne(slug);
   const suffix = slug.toUpperCase().replaceAll("-", "_");
-  const extensionId = process.env["CHROME_EXTENSION_ID_" + suffix] ?? process.env.CHROME_EXTENSION_ID;
-  if (!extensionId) throw new Error("Set CHROME_EXTENSION_ID_" + suffix + " (or CHROME_EXTENSION_ID) before publishing.");
+  const extensionId =
+    process.env["CHROME_EXTENSION_ID_" + suffix] ?? process.env.CHROME_EXTENSION_ID;
+  if (!extensionId)
+    throw new Error(
+      "Set CHROME_EXTENSION_ID_" + suffix + " (or CHROME_EXTENSION_ID) before publishing.",
+    );
   await publishChromePackage(extensionId, packages.chromeZip);
 }
 
@@ -127,12 +166,23 @@ async function main(): Promise<void> {
   const args = process.argv.slice(2).filter((value) => value !== "--");
   const command = args.shift();
   const slug = args.shift();
-  if (!command) throw new Error("Expected dev, dev:firefox, build, build-all, zip, sign:firefox, publish:chrome, or publish:firefox.");
+  if (!command)
+    throw new Error(
+      "Expected dev, dev:firefox, build, build-all, zip, sign:firefox, publish:chrome, or publish:firefox.",
+    );
   if (command === "build-all") {
     for (const extension of await listSlugs()) await buildOne(extension);
     return;
   }
-  const supported = ["dev", "dev:firefox", "build", "zip", "sign:firefox", "publish:chrome", "publish:firefox"];
+  const supported = [
+    "dev",
+    "dev:firefox",
+    "build",
+    "zip",
+    "sign:firefox",
+    "publish:chrome",
+    "publish:firefox",
+  ];
   if (!supported.includes(command)) throw new Error("Unknown command: " + command);
   if (!slug) throw new Error("Usage: pnpm " + command + " <extension-slug>");
   const directory = extensionDirectory(slug);
@@ -148,7 +198,8 @@ async function main(): Promise<void> {
     await zipOne(slug);
   } else if (command === "sign:firefox") {
     const channel = optionValue(args, "channel", "unlisted");
-    if (channel !== "listed" && channel !== "unlisted") throw new Error("Firefox channel must be listed or unlisted.");
+    if (channel !== "listed" && channel !== "unlisted")
+      throw new Error("Firefox channel must be listed or unlisted.");
     await signFirefox(slug, channel);
   } else if (command === "publish:firefox") {
     await signFirefox(slug, "listed");
@@ -156,4 +207,7 @@ async function main(): Promise<void> {
     await publishChrome(slug);
   }
 }
-main().catch((error: unknown) => { console.error(error instanceof Error ? error.message : error); process.exitCode = 1; });
+main().catch((error: unknown) => {
+  console.error(error instanceof Error ? error.message : error);
+  process.exitCode = 1;
+});

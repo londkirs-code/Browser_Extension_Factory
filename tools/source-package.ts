@@ -5,12 +5,29 @@ import { fileURLToPath } from "node:url";
 import { strToU8, zipSync } from "fflate";
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const excludedDirectories = new Set([".git", "node_modules", ".output", ".wxt", "coverage", "dist", "artifacts"]);
+const excludedDirectories = new Set([
+  ".git",
+  "node_modules",
+  ".output",
+  ".wxt",
+  "coverage",
+  "dist",
+  "artifacts",
+]);
 const excludedFiles = new Set([".env", ".env.local", ".env.production"]);
 
-async function collect(directory: string, archive: Record<string, Uint8Array>, prefix = ""): Promise<void> {
+async function collect(
+  directory: string,
+  archive: Record<string, Uint8Array>,
+  prefix = "",
+): Promise<void> {
   for (const entry of await readdir(directory, { withFileTypes: true })) {
-    if (excludedDirectories.has(entry.name) || excludedFiles.has(entry.name) || entry.name.startsWith(".env.")) continue;
+    if (
+      excludedDirectories.has(entry.name) ||
+      excludedFiles.has(entry.name) ||
+      entry.name.startsWith(".env.")
+    )
+      continue;
     const absolute = path.join(directory, entry.name);
     const relative = path.posix.join(prefix, entry.name);
     if (entry.isDirectory()) await collect(absolute, archive, relative);
@@ -21,10 +38,24 @@ async function collect(directory: string, archive: Record<string, Uint8Array>, p
 export async function createSourcePackage(slug: string): Promise<string> {
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) throw new Error("Invalid extension slug.");
   const extensionDir = path.join(rootDir, "extensions", slug);
-  const packageJson = JSON.parse(await readFile(path.join(extensionDir, "package.json"), "utf8")) as { version: string };
+  const packageJson = JSON.parse(
+    await readFile(path.join(extensionDir, "package.json"), "utf8"),
+  ) as { version: string };
   const archive: Record<string, Uint8Array> = {};
-  for (const file of ["package.json", "pnpm-workspace.yaml", "pnpm-lock.yaml", "tsconfig.base.json", ".npmrc", ".nvmrc", "LICENSE"]) {
-    try { archive[file] = await readFile(path.join(rootDir, file)); } catch { /* Optional root files. */ }
+  for (const file of [
+    "package.json",
+    "pnpm-workspace.yaml",
+    "pnpm-lock.yaml",
+    "tsconfig.base.json",
+    ".npmrc",
+    ".nvmrc",
+    "LICENSE",
+  ]) {
+    try {
+      archive[file] = await readFile(path.join(rootDir, file));
+    } catch {
+      /* Optional root files. */
+    }
   }
   await collect(path.join(rootDir, "tools"), archive, "tools");
   await collect(path.join(rootDir, "packages", "shared"), archive, "packages/shared");
@@ -55,5 +86,8 @@ async function main(): Promise<void> {
   console.log(await createSourcePackage(slug));
 }
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  main().catch((error: unknown) => { console.error(error); process.exitCode = 1; });
+  main().catch((error: unknown) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
 }

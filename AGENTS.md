@@ -70,6 +70,7 @@ Run from repository root:
 ## Shared package expectations
 
 Use `packages/shared` for:
+
 - browser/chrome compatibility and promise-based messaging;
 - typed storage defaults and migrations;
 - typed runtime messages;

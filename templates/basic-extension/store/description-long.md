@@ -1,5 +1,5 @@
-# __DISPLAY_NAME__
+# **DISPLAY_NAME**
 
-__DESCRIPTION__
+**DESCRIPTION**
 
 A Manifest V3 extension designed for Chromium-based browsers and Firefox. See `permissions.md` for the permissions disclosed for this build.

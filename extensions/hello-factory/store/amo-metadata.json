@@ -2,9 +2,7 @@
   "summary": {
     "en-US": "A small demonstration extension showing popup storage and a scoped content script."
   },
-  "categories": [
-    "other"
-  ],
+  "categories": ["other"],
   "version": {
     "license": "MIT"
   }

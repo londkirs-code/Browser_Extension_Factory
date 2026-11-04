@@ -10,8 +10,8 @@ export default tseslint.config(
       "**/.wxt/**",
       "**/coverage/**",
       "**/dist/**",
-      "**/artifacts/**"
-    ]
+      "**/artifacts/**",
+    ],
   },
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
@@ -22,8 +22,8 @@ export default tseslint.config(
         ...globals.nodeBuiltin,
         ...globals.browser,
         browser: "readonly",
-        chrome: "readonly"
-      }
+        chrome: "readonly",
+      },
     },
     rules: {
       "no-undef": "off",
@@ -31,10 +31,10 @@ export default tseslint.config(
       "@typescript-eslint/no-unused-vars": [
         "error",
         {
-          "argsIgnorePattern": "^_",
-          "varsIgnorePattern": "^_"
-        }
-      ]
-    }
-  }
+          argsIgnorePattern: "^_",
+          varsIgnorePattern: "^_",
+        },
+      ],
+    },
+  },
 );

@@ -8,4 +8,5 @@ document.documentElement.lang = locale.startsWith("he") ? "he" : "en";
 const title = document.querySelector<HTMLHeadingElement>("#options-title");
 const description = document.querySelector<HTMLParagraphElement>("#options-description");
 if (title) title.textContent = localize("optionsTitle", "Options");
-if (description) description.textContent = localize("optionsDescription", "Configure this extension.");
+if (description)
+  description.textContent = localize("optionsDescription", "Configure this extension.");

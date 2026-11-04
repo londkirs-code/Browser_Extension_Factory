@@ -4,8 +4,12 @@ import { createStorage, type StorageArea } from "./index.js";
 function memoryArea(initial: Record<string, unknown> = {}) {
   const values = { ...initial };
   const area: StorageArea = {
-    async get() { return { ...values }; },
-    async set(items) { Object.assign(values, items); },
+    async get() {
+      return { ...values };
+    },
+    async set(items) {
+      Object.assign(values, items);
+    },
     async remove(keys) {
       for (const key of Array.isArray(keys) ? keys : [keys]) delete values[key];
     },
@@ -23,7 +27,10 @@ describe("typed storage", () => {
     expect(values.count).toBe(4);
   });
   it("runs the migration for each new schema version", async () => {
-    const migrate = vi.fn((state: { count: number; label: string }) => ({ ...state, label: "migrated" }));
+    const migrate = vi.fn((state: { count: number; label: string }) => ({
+      ...state,
+      label: "migrated",
+    }));
     const { area } = memoryArea({ count: 2, __browser_extension_factory_storage_version: 1 });
     const storage = createStorage(area, {
       defaults: { count: 0, label: "default" },

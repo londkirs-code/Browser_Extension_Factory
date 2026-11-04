@@ -49,13 +49,13 @@ pnpm sign:firefox hello-factory --channel listed
 
 הוסף ב־Settings → Secrets and variables → Actions:
 
-| Secret | תוכן |
-|---|---|
-| `CHROME_CLIENT_ID` | OAuth Client ID |
-| `CHROME_CLIENT_SECRET` | OAuth Client Secret |
-| `CHROME_REFRESH_TOKEN` | OAuth refresh token |
-| `CHROME_PUBLISHER_ID` | Publisher ID מתוך Developer Dashboard |
-| `CHROME_EXTENSION_ID` | מזהה פריט החנות, אם רוצים ערך ברירת מחדל יחיד לכל המאגר |
+| Secret                 | תוכן                                                    |
+| ---------------------- | ------------------------------------------------------- |
+| `CHROME_CLIENT_ID`     | OAuth Client ID                                         |
+| `CHROME_CLIENT_SECRET` | OAuth Client Secret                                     |
+| `CHROME_REFRESH_TOKEN` | OAuth refresh token                                     |
+| `CHROME_PUBLISHER_ID`  | Publisher ID מתוך Developer Dashboard                   |
+| `CHROME_EXTENSION_ID`  | מזהה פריט החנות, אם רוצים ערך ברירת מחדל יחיד לכל המאגר |
 
 **שימו לב:** `CHROME_PUBLISHER_ID` הוא secret נוסף שנדרש לנתיבי Chrome Web Store API v2; הוא לא מופיע ברשימת ארבעת הערכים המקורית אך בלעדיו לא ניתן להרכיב את כתובת ה־API. ב־workflow אפשר להזין Extension ID ידנית בזמן ההפעלה. בהרצה מקומית אפשר להגדיר גם `CHROME_EXTENSION_ID_<SLUG>`, למשל `CHROME_EXTENSION_ID_HELLO_FACTORY`, כמשתנה סביבה.
 

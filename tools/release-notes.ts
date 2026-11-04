@@ -22,12 +22,16 @@ export function extractReleaseNotes(changelog: string, version: string): string 
 
 async function main(): Promise<void> {
   const [slug, version, outputPath] = process.argv.slice(2);
-  if (!slug || !version) throw new Error("Usage: pnpm exec tsx tools/release-notes.ts <slug> <version> [output-file]");
+  if (!slug || !version)
+    throw new Error("Usage: pnpm exec tsx tools/release-notes.ts <slug> <version> [output-file]");
   const changelog = await readFile(path.join(rootDir, "extensions", slug, "CHANGELOG.md"), "utf8");
   const notes = extractReleaseNotes(changelog, version);
   if (outputPath) await writeFile(outputPath, notes + "\n", "utf8");
   else process.stdout.write(notes + "\n");
 }
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  main().catch((error: unknown) => { console.error(error); process.exitCode = 1; });
+  main().catch((error: unknown) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
 }

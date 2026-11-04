@@ -9,7 +9,9 @@ function required(name: string): string {
   return value;
 }
 async function fail(response: Response): Promise<never> {
-  throw new Error("Chrome Web Store API returned HTTP " + response.status + ": " + await response.text());
+  throw new Error(
+    "Chrome Web Store API returned HTTP " + response.status + ": " + (await response.text()),
+  );
 }
 async function obtainAccessToken(): Promise<string> {
   const form = new URLSearchParams({
@@ -24,15 +26,19 @@ async function obtainAccessToken(): Promise<string> {
     body: form,
   });
   if (!response.ok) return fail(response);
-  const payload = await response.json() as { access_token?: string };
+  const payload = (await response.json()) as { access_token?: string };
   if (!payload.access_token) throw new Error("OAuth response did not contain an access token.");
   return payload.access_token;
 }
 
-export async function publishChromePackage(extensionId: string, packagePath: string): Promise<void> {
+export async function publishChromePackage(
+  extensionId: string,
+  packagePath: string,
+): Promise<void> {
   const publisherId = required("CHROME_PUBLISHER_ID");
   const token = await obtainAccessToken();
-  const resource = "/publishers/" + encodeURIComponent(publisherId) + "/items/" + encodeURIComponent(extensionId);
+  const resource =
+    "/publishers/" + encodeURIComponent(publisherId) + "/items/" + encodeURIComponent(extensionId);
   const archive = await readFile(packagePath);
   const upload = await fetch(uploadRoot + resource + ":upload", {
     method: "POST",
@@ -41,7 +47,7 @@ export async function publishChromePackage(extensionId: string, packagePath: str
   });
   if (!upload.ok) return fail(upload);
 
-  const uploadState = await upload.json().catch(() => ({})) as { uploadState?: string };
+  const uploadState = (await upload.json().catch(() => ({}))) as { uploadState?: string };
   if (uploadState.uploadState === "UPLOAD_IN_PROGRESS") {
     let completed = false;
     for (let attempt = 0; attempt < 60; attempt += 1) {
@@ -50,14 +56,16 @@ export async function publishChromePackage(extensionId: string, packagePath: str
         headers: { Authorization: "Bearer " + token },
       });
       if (!status.ok) return fail(status);
-      const result = await status.json() as { uploadState?: string };
-      if (result.uploadState === "FAILURE") throw new Error("Chrome Web Store package processing failed.");
+      const result = (await status.json()) as { uploadState?: string };
+      if (result.uploadState === "FAILURE")
+        throw new Error("Chrome Web Store package processing failed.");
       if (result.uploadState !== "UPLOAD_IN_PROGRESS") {
         completed = true;
         break;
       }
     }
-    if (!completed) throw new Error("Timed out while waiting for Chrome Web Store package processing.");
+    if (!completed)
+      throw new Error("Timed out while waiting for Chrome Web Store package processing.");
   }
 
   const published = await fetch(apiRoot + resource + ":publish", {

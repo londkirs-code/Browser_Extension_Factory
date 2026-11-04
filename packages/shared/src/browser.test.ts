@@ -15,7 +15,9 @@ describe("browser compatibility helpers", () => {
   });
   it("sends a typed runtime message and returns its response", async () => {
     const sendMessage = vi.fn().mockResolvedValue({ ok: true });
-    await expect(sendRuntimeMessage({ kind: "ping" }, { runtime: { sendMessage } })).resolves.toEqual({ ok: true });
+    await expect(
+      sendRuntimeMessage({ kind: "ping" }, { runtime: { sendMessage } }),
+    ).resolves.toEqual({ ok: true });
     expect(sendMessage).toHaveBeenCalledWith({ kind: "ping" });
   });
 });

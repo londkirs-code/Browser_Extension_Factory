@@ -15,12 +15,14 @@ export function createOptionsModel<T extends Record<string, unknown>>(
   ) as T;
 
   function parse(values: unknown): T {
-    const source = values && typeof values === "object" ? values as Record<string, unknown> : {};
+    const source = values && typeof values === "object" ? (values as Record<string, unknown>) : {};
     const result = { ...defaults };
     for (const definition of definitions) {
-      if (!(definition.key as string in source)) continue;
+      if (!((definition.key as string) in source)) continue;
       try {
-        const value = definition.parse ? definition.parse(source[definition.key as string]) : source[definition.key as string] as T[keyof T];
+        const value = definition.parse
+          ? definition.parse(source[definition.key as string])
+          : (source[definition.key as string] as T[keyof T]);
         if (!definition.validate || definition.validate(value as never)) {
           (result as Record<string, unknown>)[definition.key as string] = value;
         }

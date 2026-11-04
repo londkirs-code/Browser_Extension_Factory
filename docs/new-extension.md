@@ -29,6 +29,7 @@ pnpm new -- --slug reading-helper --name "Reading Helper" --description "A short
 ```
 
 דגלים נוספים:
+
 - `--host-permissions` — host patterns חובה, מופרדים בפסיקים.
 - `--optional-host-permissions` — host patterns אופציונליים.
 - `--broad-justification` — הצדקה להרשאות רחבות.

@@ -1,6 +1,9 @@
 {
   "extName": { "message": "Hello Factory", "description": "שם התוסף המוצג בדפדפן." },
-  "extDescription": { "message": "תוסף הדגמה קטן שנוצר באמצעות מפעל התוספים.", "description": "תיאור התוסף המוצג בדפדפן." },
+  "extDescription": {
+    "message": "תוסף הדגמה קטן שנוצר באמצעות מפעל התוספים.",
+    "description": "תיאור התוסף המוצג בדפדפן."
+  },
   "popupTitle": { "message": "שלום ממפעל התוספים", "description": "כותרת החלונית." },
   "inputLabel": { "message": "ערך לשמירה", "description": "תווית השדה." },
   "saveButton": { "message": "שמור ערך", "description": "כפתור השמירה." },

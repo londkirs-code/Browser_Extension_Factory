@@ -2,9 +2,7 @@
   "summary": {
     "en-US": "__DESCRIPTION__"
   },
-  "categories": [
-    "other"
-  ],
+  "categories": ["other"],
   "version": {
     "license": "MIT"
   }

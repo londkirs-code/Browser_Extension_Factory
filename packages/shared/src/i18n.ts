@@ -1,10 +1,6 @@
 import { getExtensionApi, type ExtensionApi } from "./browser.js";
 
-export function localize(
-  key: string,
-  fallback: string,
-  api?: ExtensionApi,
-): string {
+export function localize(key: string, fallback: string, api?: ExtensionApi): string {
   try {
     const message = (api ?? getExtensionApi()).i18n?.getMessage(key);
     return message?.trim() ? message : fallback;

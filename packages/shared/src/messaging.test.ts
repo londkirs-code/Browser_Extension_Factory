@@ -17,7 +17,9 @@ describe("typed messaging", () => {
     const runtime = {
       sendMessage: vi.fn(),
       onMessage: {
-        addListener(value: (message: unknown, sender: unknown) => unknown) { listener = value; },
+        addListener(value: (message: unknown, sender: unknown) => unknown) {
+          listener = value;
+        },
         removeListener,
       },
     };

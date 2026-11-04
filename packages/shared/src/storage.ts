@@ -2,9 +2,7 @@ import type { StorageArea } from "./browser.js";
 
 const VERSION_KEY = "__browser_extension_factory_storage_version";
 
-export type StorageMigration<T extends Record<string, unknown>> = (
-  current: T,
-) => T | Promise<T>;
+export type StorageMigration<T extends Record<string, unknown>> = (current: T) => T | Promise<T>;
 
 export type StorageOptions<T extends Record<string, unknown>> = {
   defaults: T;
@@ -37,7 +35,11 @@ export class TypedStorage<T extends Record<string, unknown>> {
     }
 
     let migrated = data;
-    for (let nextVersion = storedVersion + 1; nextVersion <= this.options.version; nextVersion += 1) {
+    for (
+      let nextVersion = storedVersion + 1;
+      nextVersion <= this.options.version;
+      nextVersion += 1
+    ) {
       const migration = this.options.migrations?.[nextVersion];
       if (migration) migrated = await migration(migrated);
     }

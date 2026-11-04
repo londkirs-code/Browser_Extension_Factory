@@ -1,6 +1,6 @@
-# __DISPLAY_NAME__
+# **DISPLAY_NAME**
 
-__DESCRIPTION__
+**DESCRIPTION**
 
 ## Development
 

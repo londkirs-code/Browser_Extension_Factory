@@ -23,7 +23,10 @@ export function createMessenger<M extends MessageMap>(runtime: RuntimeMessagingA
 
     on<K extends keyof M & string>(
       type: K,
-      handler: (payload: M[K]["request"], sender: unknown) => M[K]["response"] | Promise<M[K]["response"]>,
+      handler: (
+        payload: M[K]["request"],
+        sender: unknown,
+      ) => M[K]["response"] | Promise<M[K]["response"]>,
     ): () => void {
       const listener: MessageListener = (message, sender) => {
         if (!message || typeof message !== "object") return undefined;

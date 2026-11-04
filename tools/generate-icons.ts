@@ -13,7 +13,10 @@ export async function generateIconsForExtension(extensionDir: string): Promise<v
   const iconDir = path.join(extensionDir, "public", "icons");
   await mkdir(iconDir, { recursive: true });
   for (const size of iconSizes) {
-    await sharp(source).resize(size, size, { fit: "contain" }).png().toFile(path.join(iconDir, `${size}.png`));
+    await sharp(source)
+      .resize(size, size, { fit: "contain" })
+      .png()
+      .toFile(path.join(iconDir, `${size}.png`));
   }
 }
 
@@ -27,14 +30,26 @@ async function main(): Promise<void> {
   let extensions: string[] = [];
   try {
     extensions = (await readdir(extensionsDir, { withFileTypes: true }))
-      .filter((entry) => entry.isDirectory()).map((entry) => path.join(extensionsDir, entry.name));
-  } catch { /* The template can be prepared before the first extension is created. */ }
+      .filter((entry) => entry.isDirectory())
+      .map((entry) => path.join(extensionsDir, entry.name));
+  } catch {
+    /* The template can be prepared before the first extension is created. */
+  }
   extensions.push(path.join(rootDir, "templates", "basic-extension"));
   for (const extension of extensions) {
-    try { await generateIconsForExtension(extension); console.log(`Generated icons: ${path.relative(rootDir, extension)}`); }
-    catch (error) { console.warn(`Skipping ${extension}: ${error instanceof Error ? error.message : String(error)}`); }
+    try {
+      await generateIconsForExtension(extension);
+      console.log(`Generated icons: ${path.relative(rootDir, extension)}`);
+    } catch (error) {
+      console.warn(
+        `Skipping ${extension}: ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
   }
 }
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  main().catch((error: unknown) => { console.error(error); process.exitCode = 1; });
+  main().catch((error: unknown) => {
+    console.error(error);
+    process.exitCode = 1;
+  });
 }

@@ -22,23 +22,23 @@ pnpm validate
 
 ## פקודות
 
-| פקודה | פעולה |
-|---|---|
-| `pnpm new` | יצירת תוסף חדש מתוך התבנית |
-| `pnpm dev <slug>` | פיתוח ב־Chrome / Chromium |
-| `pnpm dev:firefox <slug>` | פיתוח ב־Firefox |
-| `pnpm build <slug>` | בנייה ואימות לשני הדפדפנים + web-ext lint |
-| `pnpm build:all` | בנייה של כל התוספים לשני הדפדפנים |
-| `pnpm zip <slug>` | ZIP ל־Chromium, ZIP ל־Firefox ו־ZIP של קוד המקור |
-| `pnpm lint` | ESLint ובדיקת פורמט Prettier |
-| `pnpm format` | עיצוב קבצים באמצעות Prettier |
-| `pnpm test` | בדיקות Vitest של הקוד המשותף |
-| `pnpm audit` | בדיקת חולשות בתלויות; ראו את ההחרגה המנומקת ב־`pnpm-workspace.yaml` |
-| `pnpm validate` | בדיקת קונפיגורציה, הרשאות, אייקונים וסודות |
-| `pnpm sign:firefox <slug> --channel unlisted` | חתימת XPI להפצה עצמית |
-| `pnpm sign:firefox <slug> --channel listed` | הגשה לערוץ הציבורי של AMO |
-| `pnpm publish:chrome <slug>` | העלאה ופרסום לחנות Chrome |
-| `pnpm publish:firefox <slug>` | קיצור דרך להגשת גרסת Firefox ל־AMO |
+| פקודה                                         | פעולה                                                               |
+| --------------------------------------------- | ------------------------------------------------------------------- |
+| `pnpm new`                                    | יצירת תוסף חדש מתוך התבנית                                          |
+| `pnpm dev <slug>`                             | פיתוח ב־Chrome / Chromium                                           |
+| `pnpm dev:firefox <slug>`                     | פיתוח ב־Firefox                                                     |
+| `pnpm build <slug>`                           | בנייה ואימות לשני הדפדפנים + web-ext lint                           |
+| `pnpm build:all`                              | בנייה של כל התוספים לשני הדפדפנים                                   |
+| `pnpm zip <slug>`                             | ZIP ל־Chromium, ZIP ל־Firefox ו־ZIP של קוד המקור                    |
+| `pnpm lint`                                   | ESLint ובדיקת פורמט Prettier                                        |
+| `pnpm format`                                 | עיצוב קבצים באמצעות Prettier                                        |
+| `pnpm test`                                   | בדיקות Vitest של הקוד המשותף                                        |
+| `pnpm audit`                                  | בדיקת חולשות בתלויות; ראו את ההחרגה המנומקת ב־`pnpm-workspace.yaml` |
+| `pnpm validate`                               | בדיקת קונפיגורציה, הרשאות, אייקונים וסודות                          |
+| `pnpm sign:firefox <slug> --channel unlisted` | חתימת XPI להפצה עצמית                                               |
+| `pnpm sign:firefox <slug> --channel listed`   | הגשה לערוץ הציבורי של AMO                                           |
+| `pnpm publish:chrome <slug>`                  | העלאה ופרסום לחנות Chrome                                           |
+| `pnpm publish:firefox <slug>`                 | קיצור דרך להגשת גרסת Firefox ל־AMO                                  |
 
 ## מבנה המאגר
 
