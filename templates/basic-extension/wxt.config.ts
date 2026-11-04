@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { defineConfig } from "wxt";
 
 type ExtensionConfig = {
+  slug: string;
   displayName: string;
   description: string;
   geckoId: string;
@@ -23,8 +24,9 @@ export default defineConfig({
   outDir: ".output",
   targetBrowsers: ["chrome", "firefox"],
   zip: {
+    name: config.slug,
     artifactTemplate: "{{name}}-{{version}}-{{browser}}.zip",
-    sourcesTemplate: "{{name}}-{{version}}-sources.zip",
+    zipSources: false,
     compressionLevel: 9,
   },
   manifest: ({ browser }) => ({
