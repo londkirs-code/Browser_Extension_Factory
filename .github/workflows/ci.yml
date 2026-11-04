@@ -82,6 +82,41 @@ jobs:
             echo "Formatting and lockfile commit pushed; this run continues with the dual-browser build."
           fi
 
+  generator-smoke:
+    name: Verify pnpm new and dual-browser build
+    needs: quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 12.16.1
+      - name: Install workspace dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Generate a fresh extension non-interactively
+        run: >
+          pnpm new -- --slug ci-generator-smoke
+          --name "CI Generator Smoke"
+          --description "Automated verification of the pnpm new generator."
+          --permissions storage
+          --optional-permissions=,
+          --host-permissions=,
+          --optional-host-permissions=,
+          --content-matches=https://example.com/*
+          --firefox-data-collection-required=none
+          --firefox-data-collection-optional=,
+          --popup true
+          --options true
+          --content-script true
+          --background true
+      - name: Build generated extension for Chrome and Firefox
+        run: pnpm build ci-generator-smoke
+      - name: Validate generated extension metadata and permissions
+        run: pnpm validate -- ci-generator-smoke
+
   build:
     name: Build ${{ matrix.extension }} for both browsers
     needs: [changes, quality]
