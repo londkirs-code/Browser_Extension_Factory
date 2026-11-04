@@ -1,0 +1,23 @@
+{
+  "name": "@extensions/basic-extension",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wxt",
+    "dev:chrome": "wxt -b chrome",
+    "dev:firefox": "wxt -b firefox",
+    "build:chrome": "wxt build -b chrome",
+    "build:firefox": "wxt build -b firefox",
+    "zip:chrome": "wxt zip -b chrome",
+    "zip:firefox": "wxt zip -b firefox",
+    "postinstall": "wxt prepare"
+  },
+  "dependencies": {
+    "@browser-extension-factory/shared": "workspace:*"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2",
+    "wxt": "^0.21.5"
+  }
+}

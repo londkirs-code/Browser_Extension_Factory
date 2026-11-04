@@ -1,0 +1,16 @@
+{
+  "slug": "basic-extension",
+  "displayName": "Basic Extension",
+  "description": "A secure Manifest V3 browser extension.",
+  "geckoId": "basic-extension@browser-extension-factory.invalid",
+  "version": "0.1.0",
+  "minChromeVersion": "120.0.0",
+  "minFirefoxVersion": "128.0",
+  "permissions": [],
+  "optionalPermissions": [],
+  "hostPermissions": [],
+  "optionalHostPermissions": [],
+  "contentScriptMatches": [],
+  "permissionJustifications": {},
+  "features": { "popup": true, "options": false, "contentScript": false, "background": true }
+}
