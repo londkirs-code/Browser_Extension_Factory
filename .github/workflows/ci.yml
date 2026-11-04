@@ -79,7 +79,7 @@ jobs:
             git add --all
             git commit -m "style: format repository and lock dependencies"
             git push origin HEAD:main
-            gh workflow run ci.yml --ref main
+            echo "Formatting and lockfile commit pushed; this run continues with the dual-browser build."
           fi
 
   build:
