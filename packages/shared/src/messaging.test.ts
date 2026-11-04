@@ -25,7 +25,7 @@ describe("typed messaging", () => {
     const handler = vi.fn(({ a, b }: { a: number; b: number }) => a + b);
     const unsubscribe = messenger.on("sum", handler);
     expect(listener?.({ type: "other", payload: { a: 1, b: 2 } }, {})).toBeUndefined();
-    await expect(listener?.({ type: "sum", payload: { a: 2, b: 5 } }, {})).resolves.toBe(7);
+    expect(listener?.({ type: "sum", payload: { a: 2, b: 5 } }, {})).toBe(7);
     expect(handler).toHaveBeenCalledOnce();
     unsubscribe();
     expect(removeListener).toHaveBeenCalledOnce();
