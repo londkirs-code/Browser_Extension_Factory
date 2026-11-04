@@ -15,6 +15,7 @@ const rebuildAllPrefixes = [
   "pnpm-lock.yaml",
   "tsconfig.base.json",
   "eslint.config.js",
+  ".github/workflows/",
 ];
 
 async function allSlugs(): Promise<string[]> {
