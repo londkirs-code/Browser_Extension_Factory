@@ -1,0 +1,79 @@
+name: Extension Release
+
+on:
+  push:
+    tags:
+      - "*-v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and release extension
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 12.16.1
+      - name: Install workspace dependencies
+        run: pnpm install --no-frozen-lockfile
+      - name: Parse and verify release tag
+        id: release
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          if [[ "$TAG" =~ ^([a-z0-9]+(-[a-z0-9]+)*)-v([0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?)$ ]]; then
+            echo "slug=${BASH_REMATCH[1]}" >> "$GITHUB_OUTPUT"
+            echo "version=${BASH_REMATCH[3]}" >> "$GITHUB_OUTPUT"
+          else
+            echo "Tag must use <extension-slug>-v<semver>, for example hello-factory-v1.2.0."
+            exit 1
+          fi
+      - name: Validate extension source
+        run: pnpm exec tsx tools/validate.ts "${{ steps.release.outputs.slug }}"
+      - name: Build and package both browser targets
+        run: pnpm zip "${{ steps.release.outputs.slug }}"
+      - name: Sign Firefox XPI for self-distribution
+        env:
+          AMO_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}
+          AMO_JWT_SECRET: ${{ secrets.AMO_JWT_SECRET }}
+        run: pnpm sign:firefox "${{ steps.release.outputs.slug }}" --channel unlisted
+      - name: Generate release notes from CHANGELOG
+        run: pnpm exec tsx tools/release-notes.ts "${{ steps.release.outputs.slug }}" "${{ steps.release.outputs.version }}" release-notes.md
+      - name: Upload release files as workflow artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ steps.release.outputs.slug }}-${{ steps.release.outputs.version }}
+          path: |
+            extensions/${{ steps.release.outputs.slug }}/.output/**/*.zip
+            extensions/${{ steps.release.outputs.slug }}/.output/signed-firefox/*.xpi
+          if-no-files-found: error
+          retention-days: 30
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXTENSION_SLUG: ${{ steps.release.outputs.slug }}
+          EXTENSION_VERSION: ${{ steps.release.outputs.version }}
+        shell: bash
+        run: |
+          OUTPUT="extensions/$EXTENSION_SLUG/.output"
+          CHROME_ZIP="$(find "$OUTPUT" -type f -name '*chrome*.zip' -print -quit)"
+          FIREFOX_ZIP="$(find "$OUTPUT" -type f -name '*firefox*.zip' -print -quit)"
+          SOURCE_ZIP="$(find "$OUTPUT" -type f -name '*sources.zip' -print -quit)"
+          FIREFOX_XPI="$(find "$OUTPUT/signed-firefox" -type f -name '*.xpi' -print -quit)"
+          for FILE in "$CHROME_ZIP" "$FIREFOX_ZIP" "$SOURCE_ZIP" "$FIREFOX_XPI"; do
+            if [[ -z "$FILE" || ! -f "$FILE" ]]; then
+              echo "A required release file is missing: $FILE"
+              exit 1
+            fi
+          done
+          gh release create "${GITHUB_REF_NAME}" "$CHROME_ZIP" "$FIREFOX_ZIP" "$SOURCE_ZIP" "$FIREFOX_XPI" \
+            --title "$EXTENSION_SLUG $EXTENSION_VERSION" \
+            --notes-file release-notes.md

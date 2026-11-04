@@ -1,0 +1,51 @@
+name: Bug report
+description: Report a reproducible issue in an extension or the factory.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: input
+    id: extension
+    attributes:
+      label: Extension slug
+      description: For example, hello-factory. Write "factory" for shared tooling.
+      placeholder: hello-factory
+    validations:
+      required: true
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      options:
+        - Chrome
+        - Edge
+        - Chromium
+        - Firefox
+        - Both
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Extension version
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: Include the exact command and full error output when relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs or screenshots
+      description: Remove tokens, account details, and personal data before posting.
+    validations:
+      required: false

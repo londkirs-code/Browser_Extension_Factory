@@ -1,0 +1,71 @@
+name: Publish to Browser Stores
+
+on:
+  workflow_dispatch:
+    inputs:
+      extension:
+        description: Extension slug under extensions/
+        required: true
+        type: string
+      browser:
+        description: Store to submit to
+        required: true
+        type: choice
+        options:
+          - chrome
+          - firefox
+          - both
+      firefox_channel:
+        description: AMO channel (listed submits publicly; unlisted signs for self-distribution)
+        required: true
+        type: choice
+        default: unlisted
+        options:
+          - unlisted
+          - listed
+      chrome_extension_id:
+        description: Chrome Web Store item ID for this extension (public identifier)
+        required: false
+        type: string
+      confirm_publish:
+        description: I approve this manual store submission
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Submit selected extension to store
+    if: inputs.confirm_publish
+    runs-on: ubuntu-latest
+    environment: store-publishing
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 12.16.1
+      - name: Install workspace dependencies
+        run: pnpm install --no-frozen-lockfile
+      - name: Validate selected extension
+        run: pnpm exec tsx tools/validate.ts "${{ inputs.extension }}"
+      - name: Publish to Chrome Web Store
+        if: inputs.browser == 'chrome' || inputs.browser == 'both'
+        env:
+          CHROME_CLIENT_ID: ${{ secrets.CHROME_CLIENT_ID }}
+          CHROME_CLIENT_SECRET: ${{ secrets.CHROME_CLIENT_SECRET }}
+          CHROME_REFRESH_TOKEN: ${{ secrets.CHROME_REFRESH_TOKEN }}
+          CHROME_PUBLISHER_ID: ${{ secrets.CHROME_PUBLISHER_ID }}
+          CHROME_EXTENSION_ID: ${{ inputs.chrome_extension_id || secrets.CHROME_EXTENSION_ID }}
+        run: pnpm publish:chrome "${{ inputs.extension }}"
+      - name: Sign or submit to AMO
+        if: inputs.browser == 'firefox' || inputs.browser == 'both'
+        env:
+          AMO_JWT_ISSUER: ${{ secrets.AMO_JWT_ISSUER }}
+          AMO_JWT_SECRET: ${{ secrets.AMO_JWT_SECRET }}
+        run: pnpm sign:firefox "${{ inputs.extension }}" --channel "${{ inputs.firefox_channel }}"
