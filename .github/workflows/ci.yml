@@ -114,6 +114,10 @@ jobs:
           --background true
       - name: Build generated extension for Chrome and Firefox
         run: pnpm build ci-generator-smoke
+      - name: Build all extensions for both browsers
+        run: pnpm build:all
+      - name: Verify browser ZIP and source ZIP packaging
+        run: pnpm zip ci-generator-smoke
       - name: Validate generated extension metadata and permissions
         run: pnpm validate -- ci-generator-smoke
 
