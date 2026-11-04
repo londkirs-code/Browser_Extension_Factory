@@ -38,6 +38,10 @@ jobs:
           fi
       - name: Validate extension source
         run: pnpm exec tsx tools/validate.ts "${{ steps.release.outputs.slug }}"
+      - name: Lint repository
+        run: pnpm lint
+      - name: Run unit tests
+        run: pnpm test
       - name: Build and package both browser targets
         run: pnpm zip "${{ steps.release.outputs.slug }}"
       - name: Sign Firefox XPI for self-distribution
