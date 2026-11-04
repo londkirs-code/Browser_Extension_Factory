@@ -52,8 +52,10 @@ jobs:
         with:
           name: ${{ steps.release.outputs.slug }}-${{ steps.release.outputs.version }}
           path: |
-            extensions/${{ steps.release.outputs.slug }}/.output/**/*.zip
-            extensions/${{ steps.release.outputs.slug }}/.output/signed-firefox/*.xpi
+            extensions/${{ steps.release.outputs.slug }}/.output/${{ steps.release.outputs.slug }}-${{ steps.release.outputs.version }}-chrome.zip
+            extensions/${{ steps.release.outputs.slug }}/.output/${{ steps.release.outputs.slug }}-${{ steps.release.outputs.version }}-firefox.zip
+            extensions/${{ steps.release.outputs.slug }}/.output/${{ steps.release.outputs.slug }}-${{ steps.release.outputs.version }}-sources.zip
+            extensions/${{ steps.release.outputs.slug }}/.output/signed-firefox/${{ steps.release.outputs.slug }}-${{ steps.release.outputs.version }}.xpi
           if-no-files-found: error
           retention-days: 30
       - name: Create GitHub Release
@@ -64,10 +66,10 @@ jobs:
         shell: bash
         run: |
           OUTPUT="extensions/$EXTENSION_SLUG/.output"
-          CHROME_ZIP="$(find "$OUTPUT" -type f -name '*chrome*.zip' -print -quit)"
-          FIREFOX_ZIP="$(find "$OUTPUT" -type f -name '*firefox*.zip' -print -quit)"
-          SOURCE_ZIP="$(find "$OUTPUT" -type f -name '*sources.zip' -print -quit)"
-          FIREFOX_XPI="$(find "$OUTPUT/signed-firefox" -type f -name '*.xpi' -print -quit)"
+          CHROME_ZIP="$OUTPUT/$EXTENSION_SLUG-$EXTENSION_VERSION-chrome.zip"
+          FIREFOX_ZIP="$OUTPUT/$EXTENSION_SLUG-$EXTENSION_VERSION-firefox.zip"
+          SOURCE_ZIP="$OUTPUT/$EXTENSION_SLUG-$EXTENSION_VERSION-sources.zip"
+          FIREFOX_XPI="$OUTPUT/signed-firefox/$EXTENSION_SLUG-$EXTENSION_VERSION.xpi"
           for FILE in "$CHROME_ZIP" "$FIREFOX_ZIP" "$SOURCE_ZIP" "$FIREFOX_XPI"; do
             if [[ -z "$FILE" || ! -f "$FILE" ]]; then
               echo "A required release file is missing: $FILE"
