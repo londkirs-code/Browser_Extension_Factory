@@ -1,0 +1,15 @@
+node_modules/
+.pnpm-store/
+.output/
+.wxt/
+dist/
+coverage/
+artifacts/
+.env
+.env.*
+!.env.example
+*.xpi
+*.zip
+*.crx
+.DS_Store
+Thumbs.db
