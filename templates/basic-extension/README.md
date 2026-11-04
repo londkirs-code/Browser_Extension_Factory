@@ -12,4 +12,4 @@ Run these commands from the repository root:
 - `pnpm zip __SLUG__` — create ZIP packages for both browser families.
 - `pnpm validate -- __SLUG__` — validate metadata, permissions, icons, and manifests.
 
-The extension has an independent version in this directory's `package.json`. Keep it synchronized with `CHANGELOG.md`.
+The extension version is independent and lives only in this directory's `package.json`. WXT reads that version into both browser manifests. Increment it for each release and add the matching section to `CHANGELOG.md`.
