@@ -5,7 +5,6 @@
 
 No `tabs`, `<all_urls>`, debugger, or broad network permissions are requested.
 
-
 ## Firefox data collection disclosure
 
 The extension declares `required: ["none"]` and no optional data categories. It does not collect or transmit user data outside the extension.

@@ -151,7 +151,9 @@ async function collectAnswers(options: CliOptions): Promise<Answers> {
       ? firefoxRequiredDataTypes
       : ["none"];
     if (requiredFirefoxData.includes("none") && requiredFirefoxData.length !== 1) {
-      throw new Error('Firefox data category "none" cannot be combined with other required categories.');
+      throw new Error(
+        'Firefox data category "none" cannot be combined with other required categories.',
+      );
     }
     for (const dataType of [...requiredFirefoxData, ...firefoxOptionalDataTypes]) {
       if (dataType !== "none" && !allowedFirefoxDataTypes.has(dataType)) {

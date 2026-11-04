@@ -5,17 +5,11 @@
   "geckoId": "hello-factory-20261105@browser-extension-factory.invalid",
   "minChromeVersion": "120.0.0",
   "minFirefoxVersion": "128.0",
-  "permissions": [
-    "storage"
-  ],
+  "permissions": ["storage"],
   "optionalPermissions": [],
-  "hostPermissions": [
-    "https://example.com/*"
-  ],
+  "hostPermissions": ["https://example.com/*"],
   "optionalHostPermissions": [],
-  "contentScriptMatches": [
-    "https://example.com/*"
-  ],
+  "contentScriptMatches": ["https://example.com/*"],
   "permissionJustifications": {
     "storage": "Stores the value entered by the user in the demonstration popup."
   },
@@ -27,9 +21,7 @@
   },
   "chromeKey": "",
   "firefoxDataCollectionPermissions": {
-    "required": [
-      "none"
-    ],
+    "required": ["none"],
     "optional": []
   }
 }
