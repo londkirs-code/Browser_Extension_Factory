@@ -51,7 +51,7 @@ jobs:
         with:
           version: 12.16.1
       - name: Install workspace dependencies
-        run: pnpm install --no-frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Validate selected extension
         run: pnpm exec tsx tools/validate.ts "${{ inputs.extension }}"
       - name: Publish to Chrome Web Store
