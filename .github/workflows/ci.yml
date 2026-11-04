@@ -42,6 +42,8 @@ jobs:
   quality:
     name: Lint, tests, audit, and validation
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v6
       - uses: actions/setup-node@v7
@@ -52,6 +54,9 @@ jobs:
           version: 12.16.1
       - name: Install workspace dependencies
         run: pnpm install --no-frozen-lockfile
+      - name: Format repository on main pushes
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: pnpm exec prettier --write .
       - name: Lint and format
         run: pnpm lint
       - name: Unit tests
@@ -62,6 +67,20 @@ jobs:
         run: pnpm validate
       - name: Validate workflow YAML
         run: pnpm validate:workflows
+      - name: Commit formatter output and generated lockfile
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add --all
+            git commit -m "style: format repository and lock dependencies"
+            git push origin HEAD:main
+            gh workflow run ci.yml --ref main
+          fi
 
   build:
     name: Build ${{ matrix.extension }} for both browsers
