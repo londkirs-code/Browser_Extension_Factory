@@ -59,7 +59,7 @@ pnpm zip hello-factory
 
 ## הערת audit זמנית
 
-ה־workspace אוכף `minimatch >=11.0.1` כדי לתקן את GHSA-g3hv-75wg-m249. כרגע קיימת החרגה יחידה ומנומקת ל־GHSA-gcqx-w48m-w2h4: `deepmerge@4.3.1` מגיע כתלות build-only של `web-ext > addons-linter`, ולפי מאגר הייעוץ אין לו כרגע גרסה מתוקנת. ההחרגה נמצאת ב־`pnpm-workspace.yaml`, לא מעלימה התראות אחרות, ויש להסירה ברגע שהספק יפרסם תיקון. אין להוסיף החרגות audit נוספות ללא נימוק מתועד.
+ה־workspace אוכף `minimatch >=11.0.1` כדי לתקן את GHSA-g3hv-75wg-m249. מאחר ש־`web-ext` עדיין מגיע דרך `multimatch@6.0.0`, שמייבא את ברירת המחדל שהוסרה ב־minimatch 11, ה־override מצמיד את התלות הזאת ל־`multimatch@8.0.0`, שמשתמש ב־named import התואם ל־API החדש. כרגע קיימת החרגה יחידה ומנומקת ל־GHSA-gcqx-w48m-w2h4: `deepmerge@4.3.1` מגיע כתלות build-only של `web-ext > addons-linter`, ולפי מאגר הייעוץ אין לו כרגע גרסה מתוקנת. ההחרגה נמצאת ב־`pnpm-workspace.yaml`, לא מעלימה התראות אחרות, ויש להסירה ברגע שהספק יפרסם תיקון. אין להוסיף החרגות audit נוספות ללא נימוק מתועד.
 
 ## IDE
 

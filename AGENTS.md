@@ -64,7 +64,7 @@ Run from repository root:
 - Keep extension-page CSP strict. No `eval`, `new Function`, remote executable code, inline scripts, or remote script imports.
 - Do not commit tokens, OAuth credentials, private keys, signing credentials, or local `.env` files. Use GitHub Actions Secrets and environment variables only.
 - Do not weaken validators, lint, CSP, or workflow permissions to make a build pass. Find and fix the underlying issue.
-- Keep `pnpm-workspace.yaml` security overrides reviewed and minimal. The current `minimatch` override enforces the first patched release range for GHSA-g3hv-75wg-m249.
+- Keep `pnpm-workspace.yaml` security overrides reviewed and minimal. The current `minimatch` override enforces the first patched release range for GHSA-g3hv-75wg-m249. Because `web-ext` resolves `multimatch@6.0.0` with a removed minimatch default import, pin that dependency to compatible `multimatch@8.0.0` in `pnpm-workspace.yaml`.
 - The only current audit exception is GHSA-gcqx-w48m-w2h4 for unpatched, build-only `deepmerge` pulled in by `web-ext > addons-linter`. Its rationale is documented beside the ignore entry in `pnpm-workspace.yaml` and in `docs/setup.md`. Remove it when upstream publishes a fix.
 
 ## Shared package expectations
