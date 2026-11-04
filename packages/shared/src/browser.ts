@@ -44,6 +44,11 @@ export function getExtensionApi(): ExtensionApi {
   return resolveExtensionApi(globalThis as typeof globalThis & ExtensionScope);
 }
 
+export function getStorageChangeEvent(): StorageChangeEvent | undefined {
+  const scope = globalThis as typeof globalThis & ExtensionScope;
+  return (scope.browser ?? scope.chrome)?.storage?.onChanged;
+}
+
 export async function asPromise<T>(value: T | Promise<T>): Promise<T> {
   return Promise.resolve(value);
 }
