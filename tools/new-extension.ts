@@ -4,6 +4,7 @@ import path from "node:path";
 import process from "node:process";
 import { fileURLToPath } from "node:url";
 import { createInterface } from "node:readline/promises";
+import { spawnSync } from "node:child_process";
 import { stdin as input, stdout as output } from "node:process";
 import { generateIconsForExtension } from "./generate-icons.js";
 
@@ -163,7 +164,15 @@ async function main(): Promise<void> {
     await writeFile(target, renderTemplate(await readFile(target, "utf8"), answers), "utf8");
   }
   await generateIconsForExtension(destination);
-  console.log(`Created extensions/${answers.slug}. Implement the feature-specific logic, then run pnpm build ${answers.slug}.`);
+  const pnpm = process.platform === "win32" ? "pnpm.cmd" : "pnpm";
+  const install = spawnSync(pnpm, ["install", "--no-frozen-lockfile"], {
+    cwd: rootDir,
+    stdio: "inherit",
+    shell: process.platform === "win32",
+  });
+  if (install.error) throw install.error;
+  if (install.status !== 0) throw new Error("Dependency installation failed after generating the extension.");
+  console.log(`Created extensions/${answers.slug}. It is ready for pnpm build ${answers.slug}.`);
 }
 
 main().catch((error: unknown) => {
