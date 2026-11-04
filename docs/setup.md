@@ -41,13 +41,14 @@ npm install --global pnpm@12.16.1
 pnpm install
 ```
 
-**הערת bootstrap:** הקבצים נכתבו ונשמרו ב־GitHub ללא סביבת Node 26 מחוברת לרשת, ולכן עדיין אין במאגר `pnpm-lock.yaml` שנוצר מהרצה אמיתית. ההתקנה הראשונה תיצור אותו. יש להוסיף את הקובץ ל־Git ולבצע commit. עד שה־lockfile ייכנס למאגר, ה־CI משתמש ב־`--no-frozen-lockfile`; לאחר מכן אפשר להקשיח התקנות ל־`--frozen-lockfile`.
+ה־CI מייצר את `pnpm-lock.yaml` בהתקנה הראשונה ושומר אותו ב־commit אוטומטי לאחר שכל בדיקות האיכות עוברות. לאחר שהקובץ קיים, יש להפעיל התקנות עם `pnpm install --frozen-lockfile` כדי להבטיח התקנות שחוזרות על עצמן. עד אז ה־CI משתמש ב־`--no-frozen-lockfile`.
 
 ## אימות
 
 ```bash
 pnpm lint
 pnpm test
+pnpm audit
 pnpm validate
 pnpm validate:workflows
 pnpm build hello-factory
@@ -55,6 +56,10 @@ pnpm zip hello-factory
 ```
 
 הפקודה `pnpm build hello-factory` בונה גם Chrome/Chromium וגם Firefox, בודקת את שני ה־manifests ומריצה Firefox `web-ext lint`.
+
+## הערת audit זמנית
+
+ה־workspace אוכף `minimatch >=11.0.1` כדי לתקן את GHSA-g3hv-75wg-m249. כרגע קיימת החרגה יחידה ומנומקת ל־GHSA-gcqx-w48m-w2h4: `deepmerge@4.3.1` מגיע כתלות build-only של `web-ext > addons-linter`, ולפי מאגר הייעוץ אין לו כרגע גרסה מתוקנת. ההחרגה נמצאת ב־`pnpm-workspace.yaml`, לא מעלימה התראות אחרות, ויש להסירה ברגע שהספק יפרסם תיקון. אין להוסיף החרגות audit נוספות ללא נימוק מתועד.
 
 ## IDE
 

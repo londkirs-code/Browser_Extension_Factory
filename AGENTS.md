@@ -38,7 +38,7 @@ Run from repository root:
 - `pnpm build <slug>` — build both browsers, validate both generated manifests, and run Firefox web-ext lint.
 - `pnpm build:all` — build every extension for both browsers.
 - `pnpm zip <slug>` — produce separate Chromium and Firefox ZIPs plus a reproducible source ZIP.
-- `pnpm lint`, `pnpm test`, `pnpm validate`, `pnpm validate:workflows`.
+- `pnpm lint`, `pnpm test`, `pnpm audit`, `pnpm validate`, `pnpm validate:workflows`.
 - `pnpm sign:firefox <slug> --channel unlisted` — signed XPI for self-distribution.
 - `pnpm sign:firefox <slug> --channel listed` — AMO public listing submission, including source and first-listing metadata.
 - `pnpm publish:chrome <slug>` — Chrome Web Store API v2 upload and publish.
@@ -64,6 +64,8 @@ Run from repository root:
 - Keep extension-page CSP strict. No `eval`, `new Function`, remote executable code, inline scripts, or remote script imports.
 - Do not commit tokens, OAuth credentials, private keys, signing credentials, or local `.env` files. Use GitHub Actions Secrets and environment variables only.
 - Do not weaken validators, lint, CSP, or workflow permissions to make a build pass. Find and fix the underlying issue.
+- Keep `pnpm-workspace.yaml` security overrides reviewed and minimal. The current `minimatch` override enforces the first patched release range for GHSA-g3hv-75wg-m249.
+- The only current audit exception is GHSA-gcqx-w48m-w2h4 for unpatched, build-only `deepmerge` pulled in by `web-ext > addons-linter`. Its rationale is documented beside the ignore entry in `pnpm-workspace.yaml` and in `docs/setup.md`. Remove it when upstream publishes a fix.
 
 ## Shared package expectations
 
@@ -84,10 +86,11 @@ Run and address failures from:
 
 1. `pnpm lint`
 2. `pnpm test`
-3. `pnpm validate`
-4. `pnpm build <slug>` — this always means both target browsers.
-5. Confirm Firefox `web-ext lint` passes; this is part of the build command.
-6. If workflows changed, run `pnpm validate:workflows`.
+3. `pnpm audit` — the one documented deepmerge advisory is the only allowed temporary exception.
+4. `pnpm validate`
+5. `pnpm build <slug>` — this always means both target browsers.
+6. Confirm Firefox `web-ext lint` passes; this is part of the build command.
+7. If workflows changed, run `pnpm validate:workflows`.
 
 Never claim a check passed unless its command actually ran and returned success. Record any check that could not be run and why.
 

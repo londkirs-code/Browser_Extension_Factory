@@ -1,5 +1,15 @@
 packages:
   - "extensions/*"
   - "packages/*"
+
 allowBuilds:
   esbuild: true
+
+overrides:
+  "minimatch@<11.0.1": "^11.0.1"
+
+audit:
+  ignore:
+    # GHSA-gcqx-w48m-w2h4: deepmerge 4.3.1 is a build-only web-ext/addons-linter dependency.
+    # The advisory currently has no patched release; remove this exception once upstream fixes it.
+    - GHSA-gcqx-w48m-w2h4

@@ -14,6 +14,7 @@ pnpm new
 pnpm build hello-factory
 pnpm test
 pnpm lint
+pnpm audit
 pnpm validate
 ```
 
@@ -32,6 +33,7 @@ pnpm validate
 | `pnpm lint` | ESLint ובדיקת פורמט Prettier |
 | `pnpm format` | עיצוב קבצים באמצעות Prettier |
 | `pnpm test` | בדיקות Vitest של הקוד המשותף |
+| `pnpm audit` | בדיקת חולשות בתלויות; ראו את ההחרגה המנומקת ב־`pnpm-workspace.yaml` |
 | `pnpm validate` | בדיקת קונפיגורציה, הרשאות, אייקונים וסודות |
 | `pnpm sign:firefox <slug> --channel unlisted` | חתימת XPI להפצה עצמית |
 | `pnpm sign:firefox <slug> --channel listed` | הגשה לערוץ הציבורי של AMO |
@@ -54,7 +56,7 @@ pnpm validate
 2. מבקשים רק הרשאות שנדרשות לתכונה קיימת; הרשאות רחבות דורשות הצדקה מתועדת.
 3. אין secrets, מפתחות פרטיים או OAuth tokens בקוד.
 4. פרסום לחנויות לא מתרחש אוטומטית בעקבות push או tag. הוא דורש הפעלה ידנית ואישור מפורש.
-5. לפני commit מריצים lint, tests, validate ובנייה לשני הדפדפנים.
+5. לפני commit מריצים lint, tests, audit, validate ובנייה לשני הדפדפנים.
 
 ## מדריכים
 
