@@ -8,7 +8,9 @@ type ExtensionConfig = {
 };
 const config = JSON.parse(readFileSync(new URL("./extension.config.json", import.meta.url), "utf8")) as ExtensionConfig;
 
-export default defineConfig(({ browser }) => ({
+export default defineConfig((context) => {
+  const browser = context?.browser ?? "chrome";
+  return {
   srcDir: ".",
   outDir: ".output",
   targetBrowsers: ["chrome", "firefox"],
@@ -27,4 +29,5 @@ export default defineConfig(({ browser }) => ({
       ? { browser_specific_settings: { gecko: { id: config.geckoId, strict_min_version: config.minFirefoxVersion } } }
       : { minimum_chrome_version: config.minChromeVersion, ...(config.chromeKey ? { key: config.chromeKey } : {}) }),
   },
-}));
+  };
+});
