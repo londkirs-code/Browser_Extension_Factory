@@ -23,7 +23,7 @@ export async function createSourcePackage(slug: string): Promise<string> {
   const extensionDir = path.join(rootDir, "extensions", slug);
   const packageJson = JSON.parse(await readFile(path.join(extensionDir, "package.json"), "utf8")) as { version: string };
   const archive: Record<string, Uint8Array> = {};
-  for (const file of ["package.json", "pnpm-workspace.yaml", "tsconfig.base.json", ".npmrc", ".nvmrc", "LICENSE"]) {
+  for (const file of ["package.json", "pnpm-workspace.yaml", "pnpm-lock.yaml", "tsconfig.base.json", ".npmrc", ".nvmrc", "LICENSE"]) {
     try { archive[file] = await readFile(path.join(rootDir, file)); } catch { /* Optional root files. */ }
   }
   await collect(path.join(rootDir, "tools"), archive, "tools");

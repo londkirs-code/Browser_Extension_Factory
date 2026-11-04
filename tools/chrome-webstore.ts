@@ -1,6 +1,8 @@
 import { readFile } from "node:fs/promises";
 
 const apiRoot = "https://chromewebstore.googleapis.com/v2";
+const uploadRoot = "https://chromewebstore.googleapis.com/upload/v2";
+
 function required(name: string): string {
   const value = process.env[name];
   if (!value) throw new Error("Missing required environment variable: " + name);
@@ -30,9 +32,9 @@ async function obtainAccessToken(): Promise<string> {
 export async function publishChromePackage(extensionId: string, packagePath: string): Promise<void> {
   const publisherId = required("CHROME_PUBLISHER_ID");
   const token = await obtainAccessToken();
-  const endpoint = apiRoot + "/publishers/" + encodeURIComponent(publisherId) + "/items/" + encodeURIComponent(extensionId);
+  const resource = "/publishers/" + encodeURIComponent(publisherId) + "/items/" + encodeURIComponent(extensionId);
   const archive = await readFile(packagePath);
-  const upload = await fetch(endpoint + ":upload", {
+  const upload = await fetch(uploadRoot + resource + ":upload", {
     method: "POST",
     headers: { Authorization: "Bearer " + token, "Content-Type": "application/zip" },
     body: archive,
@@ -44,18 +46,21 @@ export async function publishChromePackage(extensionId: string, packagePath: str
     let completed = false;
     for (let attempt = 0; attempt < 60; attempt += 1) {
       await new Promise((resolve) => setTimeout(resolve, 5_000));
-      const status = await fetch(endpoint + ":fetchStatus", {
+      const status = await fetch(apiRoot + resource + ":fetchStatus", {
         headers: { Authorization: "Bearer " + token },
       });
       if (!status.ok) return fail(status);
       const result = await status.json() as { uploadState?: string };
       if (result.uploadState === "FAILURE") throw new Error("Chrome Web Store package processing failed.");
-      if (result.uploadState !== "UPLOAD_IN_PROGRESS") { completed = true; break; }
+      if (result.uploadState !== "UPLOAD_IN_PROGRESS") {
+        completed = true;
+        break;
+      }
     }
     if (!completed) throw new Error("Timed out while waiting for Chrome Web Store package processing.");
   }
 
-  const published = await fetch(endpoint + ":publish", {
+  const published = await fetch(apiRoot + resource + ":publish", {
     method: "POST",
     headers: { Authorization: "Bearer " + token },
   });

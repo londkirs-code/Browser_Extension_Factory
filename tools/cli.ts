@@ -105,7 +105,9 @@ async function signFirefox(slug: string, channel: "listed" | "unlisted"): Promis
   const args = ["exec", "web-ext", "sign", "--source-dir", sourceDir, "--artifacts-dir", artifactsDir, "--channel", channel, "--no-input"];
   if (channel === "listed") {
     const sourceZip = await createSourcePackage(slug);
-    args.push("--upload-source-code", sourceZip);
+    const amoMetadata = path.join(directory, "store", "amo-metadata.json");
+    await access(amoMetadata);
+    args.push("--upload-source-code", sourceZip, "--amo-metadata", amoMetadata);
   }
   runPnpm(args, env);
   const xpis = await findFiles(artifactsDir, ".xpi");

@@ -2,7 +2,7 @@ import { readFileSync } from "node:fs";
 import { defineConfig } from "wxt";
 
 type ExtensionConfig = {
-  geckoId: string; minChromeVersion: string; minFirefoxVersion: string;
+  geckoId: string; chromeKey?: string; minChromeVersion: string; minFirefoxVersion: string;
   permissions: string[]; optionalPermissions: string[];
   hostPermissions: string[]; optionalHostPermissions: string[];
 };
@@ -25,6 +25,6 @@ export default defineConfig(({ browser }) => ({
     content_security_policy: { extension_pages: "script-src 'self'; object-src 'self';" },
     ...(browser === "firefox"
       ? { browser_specific_settings: { gecko: { id: config.geckoId, strict_min_version: config.minFirefoxVersion } } }
-      : { minimum_chrome_version: config.minChromeVersion }),
+      : { minimum_chrome_version: config.minChromeVersion, ...(config.chromeKey ? { key: config.chromeKey } : {}) }),
   },
 }));
