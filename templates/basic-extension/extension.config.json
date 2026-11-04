@@ -19,9 +19,7 @@
     "background": true
   },
   "firefoxDataCollectionPermissions": {
-    "required": [
-      "none"
-    ],
+    "required": ["none"],
     "optional": []
   }
 }
