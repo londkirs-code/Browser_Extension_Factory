@@ -1,4 +1,4 @@
-import { access, readFile, readdir, rm, stat, copyFile } from "node:fs/promises";
+import { access, readFile, readdir, rm, stat, copyFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { spawnSync } from "node:child_process";
@@ -80,16 +80,36 @@ async function buildOne(slug: string): Promise<void> {
   if (slug === "page-ocr") {
     const firefoxOutput = path.join(directory, ".output", "firefox-mv3");
     for (const relativePath of ["background.js", "vendor/ocr/worker.min.js"]) {
-      const source = await readFile(path.join(firefoxOutput, relativePath), "utf8");
-      console.log(
-        "OCR CSP scan " + relativePath + ":",
-        source.match(/.{0,100}Function.{0,100}/g) ?? [],
+      const filePath = path.join(firefoxOutput, relativePath);
+      const source = await readFile(filePath, "utf8");
+      let patchedFallbacks = 0;
+      const safeSource = source.replace(
+        /Function\(["']r["']\s*,\s*["']regeneratorRuntime = r["']\)\(([A-Za-z_$][\w$]*)\)/g,
+        (_match, runtimeVariable: string) => {
+          patchedFallbacks += 1;
+          return "globalThis.regeneratorRuntime = " + runtimeVariable + ";";
+        },
       );
+      if (patchedFallbacks) await writeFile(filePath, safeSource);
+      console.log("Patched regenerator fallbacks in " + relativePath + ": " + patchedFallbacks);
     }
   }
   await validateExtension(slug, { requireBuilt: true });
   const firefoxOutput = path.join(directory, ".output", "firefox-mv3");
-  runPnpm(["exec", "web-ext", "lint", "--source-dir", firefoxOutput, "--warnings-as-errors"]);
+  try {
+    runPnpm(["exec", "web-ext", "lint", "--source-dir", firefoxOutput, "--warnings-as-errors"]);
+  } catch (error) {
+    if (slug === "page-ocr") {
+      for (const relativePath of ["background.js", "vendor/ocr/worker.min.js"]) {
+        const source = await readFile(path.join(firefoxOutput, relativePath), "utf8");
+        console.error(
+          "Remaining OCR CSP tokens in " + relativePath + ":",
+          source.match(/.{0,100}Function.{0,100}/g) ?? [],
+        );
+      }
+    }
+    throw error;
+  }
   for (const browser of ["chrome", "firefox"]) {
     const output = path.join(
       directory,
