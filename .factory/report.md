@@ -1,7 +1,7 @@
 # Factory run report
 
 Overall: FAILED
-Commit before run: 93529731764d381bb27dbc469736974f9a4bf28d
+Commit before run: 3d4d5c1b0a831b1f20de1db251aeb649a16b4a9f
 
 | Step                                              | Result |
 | ------------------------------------------------- | ------ |
@@ -18,13 +18,9 @@ Commit before run: 93529731764d381bb27dbc469736974f9a4bf28d
 ## Failure: build all (Chrome + Firefox, web-ext lint)
 
 ```
-  ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core-simd-lstm.wasm            2.86 MB
-  ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core-simd.wasm                 3.45 MB
-  ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core.wasm                      3.45 MB
-  ├─ .output/firefox-mv3/vendor/ocr/lang/eng.traineddata.gz                       2.95 MB
   └─ .output/firefox-mv3/vendor/ocr/lang/heb.traineddata.gz                       580.58 kB
 Σ Total size: 48.93 MB
-[success] Finished in 563 ms
+[success] Finished in 407 ms
 Validation Summary:
 
 errors          2
@@ -75,6 +71,10 @@ JS_SYNTAX_ERROR   JavaScript    There is a JavaScript    vendor/ocr…   2
 $ tsx tools/cli.ts build-all
 [warn] The following entrypoints have been skipped:
 - offscreen
+OCR worker syntax context: {
+  line1: '&this.f()}a.prototype.f=function(){var t,e=this.buffer,r=e.length,n=new(o?Uint8Array:Array)(r<<1);if(o)n.set(e);else for(t=0;t<r;++t)n[t]=e[t];return this.buffer=n},a.prototype.d=function(t,e,r){var n',
+  line2: ''
+}
 Command failed (1): pnpm exec web-ext lint --source-dir /home/runner/work/Browser_Extension_Factory/Browser_Extension_Factory/extensions/page-ocr/.output/firefox-mv3 --warnings-as-errors
 [ELIFECYCLE] Command failed with exit code 1.
 
@@ -83,13 +83,9 @@ Command failed (1): pnpm exec web-ext lint --source-dir /home/runner/work/Browse
 ## Failure: package page-ocr (Chrome + Firefox + source ZIPs)
 
 ```
-  ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core-simd-lstm.wasm            2.86 MB
-  ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core-simd.wasm                 3.45 MB
-  ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core.wasm                      3.45 MB
-  ├─ .output/firefox-mv3/vendor/ocr/lang/eng.traineddata.gz                       2.95 MB
   └─ .output/firefox-mv3/vendor/ocr/lang/heb.traineddata.gz                       580.58 kB
 Σ Total size: 48.93 MB
-[success] Finished in 562 ms
+[success] Finished in 453 ms
 Validation Summary:
 
 errors          2
@@ -140,6 +136,10 @@ JS_SYNTAX_ERROR   JavaScript    There is a JavaScript    vendor/ocr…   2
 $ tsx tools/cli.ts zip page-ocr
 [warn] The following entrypoints have been skipped:
 - offscreen
+OCR worker syntax context: {
+  line1: '&this.f()}a.prototype.f=function(){var t,e=this.buffer,r=e.length,n=new(o?Uint8Array:Array)(r<<1);if(o)n.set(e);else for(t=0;t<r;++t)n[t]=e[t];return this.buffer=n},a.prototype.d=function(t,e,r){var n',
+  line2: ''
+}
 Command failed (1): pnpm exec web-ext lint --source-dir /home/runner/work/Browser_Extension_Factory/Browser_Extension_Factory/extensions/page-ocr/.output/firefox-mv3 --warnings-as-errors
 [ELIFECYCLE] Command failed with exit code 1.
 
