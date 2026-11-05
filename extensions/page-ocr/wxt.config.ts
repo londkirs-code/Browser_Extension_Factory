@@ -42,6 +42,35 @@ function resolvePackageRoot(packageName: string): string {
   }
 }
 
+async function patchRegeneratorFallbacks(filePath: string): Promise<void> {
+  let source: string;
+  try {
+    source = await readFile(filePath, "utf8");
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return;
+    throw error;
+  }
+
+  let patched = 0;
+  const safeSource = source.replace(
+    /Function\(["']r["']\s*,\s*["']regeneratorRuntime = r["']\)\(([A-Za-z_$][\w$]*)\)/g,
+    (_match, runtimeVariable: string) => {
+      patched += 1;
+      return "globalThis.regeneratorRuntime = " + runtimeVariable + ";";
+    },
+  );
+  if (patched) await writeFile(filePath, safeSource);
+}
+
+async function patchBuiltOcrFallbacks(): Promise<void> {
+  const outputRoot = fileURLToPath(new URL("./.output", import.meta.url));
+  for (const browser of ["chrome-mv3", "firefox-mv3"]) {
+    for (const relativePath of ["background.js", "vendor/ocr/worker.min.js"]) {
+      await patchRegeneratorFallbacks(path.join(outputRoot, browser, relativePath));
+    }
+  }
+}
+
 async function copyOcrAssets(): Promise<void> {
   const target = fileURLToPath(new URL("./public/vendor/ocr", import.meta.url));
   const coreTarget = path.join(target, "core");
@@ -100,6 +129,9 @@ export default defineConfig({
   hooks: {
     "build:before": async () => {
       await copyOcrAssets();
+    },
+    "build:done": async () => {
+      await patchBuiltOcrFallbacks();
     },
   },
   manifest: ({ browser }) => ({
