@@ -1,5 +1,6 @@
 import { createMessenger, type RuntimeMessagingApi } from "@browser-extension-factory/shared";
 import type { PageOcrMessages } from "../messages.js";
+import { serializeError } from "../errors.js";
 
 type ChromeOffscreenApi = {
   hasDocument(): Promise<boolean>;
@@ -69,28 +70,30 @@ export default defineBackground(() => {
         dataUrl: await browser.tabs.captureVisibleTab(undefined, { format: "png" }),
       };
     } catch (error) {
-      return {
-        error: error instanceof Error ? error.message : "Unable to capture this tab.",
-      };
+      return { error: serializeError(error) };
     }
   });
 
   messenger.on("page-ocr:recognize", async ({ imageDataUrl }) => {
-    if (import.meta.env.BROWSER === "chrome") {
-      await ensureOffscreenDocument();
-      let lastError: unknown;
-      for (let attempt = 0; attempt < 40; attempt += 1) {
-        try {
-          return await messenger.send("page-ocr:run", { imageDataUrl });
-        } catch (error) {
-          lastError = error;
-          await delay(100);
+    try {
+      if (import.meta.env.BROWSER === "chrome") {
+        await ensureOffscreenDocument();
+        let lastError: unknown;
+        for (let attempt = 0; attempt < 40; attempt += 1) {
+          try {
+            return await messenger.send("page-ocr:run", { imageDataUrl });
+          } catch (error) {
+            lastError = error;
+            await delay(100);
+          }
         }
+        const detail = lastError instanceof Error ? `: ${lastError.message}` : "";
+        throw new Error(`OCR offscreen listener did not become available${detail}`);
       }
-      const detail = lastError instanceof Error ? `: ${lastError.message}` : "";
-      throw new Error(`OCR offscreen listener did not become available${detail}`);
+      const { recognizeImage } = await import("../ocr/engine.js");
+      return { text: await recognizeImage(imageDataUrl) };
+    } catch (error) {
+      return { error: serializeError(error) };
     }
-    const { recognizeImage } = await import("../ocr/engine.js");
-    return { text: await recognizeImage(imageDataUrl) };
   });
 });

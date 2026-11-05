@@ -1,4 +1,7 @@
-export type CaptureResponse = { dataUrl: string } | { error: string };
+import type { SerializedOcrError } from "./errors.js";
+
+export type CaptureResponse = { dataUrl: string } | { error: SerializedOcrError };
+export type OcrResponse = { text: string } | { error: SerializedOcrError };
 
 export type PageOcrMessages = {
   "page-ocr:capture-visible": {
@@ -7,10 +10,10 @@ export type PageOcrMessages = {
   };
   "page-ocr:recognize": {
     request: { imageDataUrl: string };
-    response: { text: string };
+    response: OcrResponse;
   };
   "page-ocr:run": {
     request: { imageDataUrl: string };
-    response: { text: string };
+    response: OcrResponse;
   };
 };

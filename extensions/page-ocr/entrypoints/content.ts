@@ -10,6 +10,38 @@ import type { PageOcrMessages } from "../messages.js";
 
 type PageWindow = Window & { __pageOcrSelectionActive?: boolean };
 
+type OcrStage = "capture" | "crop" | "recognize";
+
+type ErrorDetails = { name: string; message: string; stack?: string };
+
+function getErrorDetails(error: unknown): ErrorDetails {
+  if (error && typeof error === "object") {
+    const candidate = error as { name?: unknown; message?: unknown; stack?: unknown };
+    return {
+      name: typeof candidate.name === "string" ? candidate.name : "Error",
+      message: typeof candidate.message === "string" ? candidate.message : String(error),
+      ...(typeof candidate.stack === "string" ? { stack: candidate.stack } : {}),
+    };
+  }
+  return { name: "Error", message: String(error) };
+}
+
+class OcrStageError extends Error {
+  constructor(readonly stage: OcrStage, readonly originalError: unknown) {
+    const details = getErrorDetails(originalError);
+    super(`${stage} · ${details.name}: ${details.message}`);
+    this.name = details.name;
+  }
+}
+
+async function runOcrStage<T>(stage: OcrStage, operation: () => Promise<T>): Promise<T> {
+  try {
+    return await operation();
+  } catch (error) {
+    throw new OcrStageError(stage, error);
+  }
+}
+
 function showResult(
   text: string,
   rtl: boolean,
@@ -217,12 +249,19 @@ export default defineContentScript({
         await new Promise<void>((resolve) =>
           requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
         );
-        const capture = await messenger.send("page-ocr:capture-visible", {});
-        if ("error" in capture) throw new Error(capture.error);
-        const croppedImage = await cropScreenshot(capture.dataUrl, rect);
-        const result = await messenger.send("page-ocr:recognize", {
-          imageDataUrl: croppedImage,
-        });
+        const capture = await runOcrStage("capture", () =>
+          messenger.send("page-ocr:capture-visible", {}),
+        );
+        if ("error" in capture) throw new OcrStageError("capture", capture.error);
+
+        const croppedImage = await runOcrStage("crop", () =>
+          cropScreenshot(capture.dataUrl, rect),
+        );
+        const result = await runOcrStage("recognize", () =>
+          messenger.send("page-ocr:recognize", { imageDataUrl: croppedImage }),
+        );
+        if ("error" in result) throw new OcrStageError("recognize", result.error);
+
         showResult(
           result.text,
           rtl,
@@ -230,8 +269,20 @@ export default defineContentScript({
           labels,
         );
       } catch (error) {
-        const detail = error instanceof Error ? error.message : String(error);
-        showResult("", rtl, `${localize("ocrFailed", "OCR failed")}: ${detail}`, labels);
+        const failure = error instanceof OcrStageError ? error : new OcrStageError("capture", error);
+        const details = getErrorDetails(failure.originalError);
+        console.error("Page OCR failed", {
+          stage: failure.stage,
+          name: details.name,
+          message: details.message,
+          stack: details.stack,
+        }, failure.originalError);
+        showResult(
+          "",
+          rtl,
+          `${localize("ocrFailed", "OCR failed")}: ${failure.stage} · ${details.name}: ${details.message}`,
+          labels,
+        );
       }
     };
 
