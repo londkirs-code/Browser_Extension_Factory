@@ -84,7 +84,7 @@ async function buildOne(slug: string): Promise<void> {
   } catch (error) {
     if (slug === "page-ocr") {
       const workerSource = await readFile(path.join(firefoxOutput, "vendor/ocr/worker.min.js"), "utf8");
-      const lines = workerSource.split("\\n");
+      const lines = workerSource.split("\n");
       console.error("OCR worker syntax context:", {
         line1: lines[0]?.slice(7750, 7950),
         line2: lines[1]?.slice(6860, 7060),
