@@ -235,7 +235,7 @@ export default defineContentScript({
         showResult(
           "",
           rtl,
-          localize("ocrFailed", "OCR failed: {error}").replace("{error}", detail),
+          `${localize("ocrFailed", "OCR failed")}: ${detail}`,
           labels,
         );
       }
