@@ -320,6 +320,9 @@ async function main(): Promise<void> {
   if (install.status !== 0)
     throw new Error("Dependency installation failed after generating the extension.");
   console.log(`Created extensions/${answers.slug}. It is ready for pnpm build ${answers.slug}.`);
+  console.warn(
+    "IMPORTANT: pnpm-lock.yaml was updated. Commit the updated lockfile in the same commit as this new extension, then run pnpm install --frozen-lockfile and verify it succeeds before pushing.",
+  );
 }
 
 main().catch((error: unknown) => {
