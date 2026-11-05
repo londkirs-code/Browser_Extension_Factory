@@ -86,7 +86,7 @@ async function assertChromeOffscreenRunListener(): Promise<void> {
     "chunks",
   );
   const chunkFiles = (await readdir(chunksDirectory)).filter((file) =>
-    /^offscreen-.*\\.js$/.test(file),
+    file.startsWith("offscreen-") && file.endsWith(".js"),
   );
   if (!chunkFiles.length) {
     throw new Error(
