@@ -1,0 +1,1 @@
+Select an area of the page and copy its Hebrew/English text to the clipboard using local OCR.

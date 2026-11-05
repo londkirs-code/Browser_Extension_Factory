@@ -1,0 +1,20 @@
+{
+  "extName": {
+    "message": "__DISPLAY_NAME__",
+    "description": "Extension name shown by the browser."
+  },
+  "extDescription": {
+    "message": "__DESCRIPTION__",
+    "description": "Extension description shown by the browser."
+  },
+  "popupTitle": { "message": "Extension ready", "description": "Popup title." },
+  "popupBody": {
+    "message": "Add the feature-specific behavior in this project.",
+    "description": "Popup introduction."
+  },
+  "optionsTitle": { "message": "Options", "description": "Options page title." },
+  "optionsDescription": {
+    "message": "Configure this extension.",
+    "description": "Options page introduction."
+  }
+}

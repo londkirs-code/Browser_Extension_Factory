@@ -1,0 +1,11 @@
+{
+  "extName": { "message": "__DISPLAY_NAME__", "description": "שם התוסף המוצג בדפדפן." },
+  "extDescription": { "message": "__DESCRIPTION__", "description": "תיאור התוסף המוצג בדפדפן." },
+  "popupTitle": { "message": "התוסף מוכן", "description": "כותרת החלונית." },
+  "popupBody": {
+    "message": "כאן מוסיפים את הפעולה הייחודית של התוסף.",
+    "description": "טקסט פתיחה בחלונית."
+  },
+  "optionsTitle": { "message": "הגדרות", "description": "כותרת מסך ההגדרות." },
+  "optionsDescription": { "message": "הגדרות התוסף.", "description": "תיאור מסך ההגדרות." }
+}
