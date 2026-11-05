@@ -15,6 +15,7 @@
     "build": "tsx tools/cli.ts build",
     "build:all": "tsx tools/cli.ts build-all",
     "zip": "tsx tools/cli.ts zip",
+    "export:releases": "tsx tools/export-releases.ts",
     "lint": "eslint . && prettier --check .",
     "format": "prettier --write .",
     "test": "vitest run",
