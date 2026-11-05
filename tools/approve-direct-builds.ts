@@ -41,9 +41,7 @@ const workspace = document.toJS() as {
 const pending = Object.entries(workspace.allowBuilds ?? {}).filter(
   ([, decision]) => decision === "set this to true or false",
 );
-const approved = pending
-  .map(([name]) => name)
-  .filter((name) => directDependencies.has(name));
+const approved = pending.map(([name]) => name).filter((name) => directDependencies.has(name));
 
 for (const name of approved) document.setIn(["allowBuilds", name], true);
 

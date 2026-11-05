@@ -113,9 +113,11 @@ if (existsSync(requestDirectory)) {
       .map((file) => {
         try {
           return String(
-            (JSON.parse(readFileSync(path.join(requestDirectory, file), "utf8")) as {
-              slug?: unknown;
-            }).slug ?? "",
+            (
+              JSON.parse(readFileSync(path.join(requestDirectory, file), "utf8")) as {
+                slug?: unknown;
+              }
+            ).slug ?? "",
           );
         } catch {
           return "";
