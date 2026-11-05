@@ -1,4 +1,4 @@
-import { copyFile, mkdir, readdir } from "node:fs/promises";
+import { copyFile, mkdir, readFile, readdir, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import path from "node:path";
 import { readFileSync } from "node:fs";
@@ -50,10 +50,24 @@ async function copyOcrAssets(): Promise<void> {
   await mkdir(languageTarget, { recursive: true });
 
   const tesseractRoot = resolvePackageRoot("tesseract.js");
-  await copyFile(
-    path.join(tesseractRoot, "dist", "worker.min.js"),
-    path.join(target, "worker.min.js"),
+  const workerTarget = path.join(target, "worker.min.js");
+  await copyFile(path.join(tesseractRoot, "dist", "worker.min.js"), workerTarget);
+
+  // regenerator-runtime uses Function(...) only as a strict-mode fallback.
+  // Assigning the same runtime on globalThis preserves behavior without eval-like code.
+  const workerSource = await readFile(workerTarget, "utf8");
+  let patchedFallbacks = 0;
+  const safeWorkerSource = workerSource.replace(
+    /Function\((['"])r\\1\\s*,\\s*(['"])regeneratorRuntime = r\\2\\)\\(runtime\\);?/g,
+    () => {
+      patchedFallbacks += 1;
+      return "globalThis.regeneratorRuntime = runtime;";
+    },
   );
+  if (patchedFallbacks === 0) {
+    throw new Error("The expected regenerator-runtime fallback was not found in worker.min.js.");
+  }
+  await writeFile(workerTarget, safeWorkerSource);
 
   const coreRoot = resolvePackageRoot("tesseract.js-core");
   const coreFiles = (await readdir(coreRoot)).filter(
