@@ -4,6 +4,10 @@ All notable changes to this extension are documented here.
 
 ## [0.1.0] - 2026-11-05
 
+### Fixed
+
+- Declare the Manifest V3 toolbar action so clicking the extension icon works in Chrome and Firefox.
+
 ### Added
 
 - Select a visible page area and crop its screenshot locally.
