@@ -83,7 +83,10 @@ async function buildOne(slug: string): Promise<void> {
     runPnpm(["exec", "web-ext", "lint", "--source-dir", firefoxOutput, "--warnings-as-errors"]);
   } catch (error) {
     if (slug === "page-ocr") {
-      const workerSource = await readFile(path.join(firefoxOutput, "vendor/ocr/worker.min.js"), "utf8");
+      const workerSource = await readFile(
+        path.join(firefoxOutput, "vendor/ocr/worker.min.js"),
+        "utf8",
+      );
       const lines = workerSource.split("\n");
       console.error("OCR worker syntax context:", {
         line1: lines[0]?.slice(7750, 7950),

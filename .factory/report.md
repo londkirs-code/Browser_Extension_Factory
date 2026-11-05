@@ -11,8 +11,8 @@ Commit before run: 3d4d5c1b0a831b1f20de1db251aeb649a16b4a9f
 | audit                                             | PASS   |
 | validate                                          | PASS   |
 | validate workflows                                | PASS   |
-| build all (Chrome + Firefox, web-ext lint)        | FAIL   |
-| package page-ocr (Chrome + Firefox + source ZIPs) | FAIL   |
+| build all (Chrome + Firefox, web-ext lint)        | PASS   |
+| package page-ocr (Chrome + Firefox + source ZIPs) | PASS   |
 | frozen install check                              | PASS   |
 
 ## Failure: build all (Chrome + Firefox, web-ext lint)
