@@ -1,5 +1,9 @@
 # Permission disclosures
 
-Keep this file synchronized with `extension.config.json`. For every required API permission, optional API permission, required host pattern, and optional host pattern, explain the user-visible feature that needs it.
+Keep this file synchronized with `extension.config.json`.
 
-The base template requests no API permissions and no host permissions.
+- `activeTab`: access the currently active tab only after the user clicks the extension action; needed to capture its visible screenshot.
+- `scripting`: inject the selection interface into the current tab after the user clicks the extension action.
+- `clipboardWrite`: copy recognized text after the user clicks the copy button.
+
+No host permissions are requested. OCR uses bundled local code and language data; selected content is not sent to a remote service.
