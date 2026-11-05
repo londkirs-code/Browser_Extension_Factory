@@ -57,6 +57,8 @@ pnpm zip hello-factory
 
 הפקודה `pnpm build hello-factory` בונה גם Chrome/Chromium וגם Firefox, בודקת את שני ה־manifests ומריצה Firefox `web-ext lint`. התבנית דורשת Firefox 142 ומעלה כדי לתמוך בהצהרת איסוף הנתונים של MV3 גם ב־Firefox Android.
 
+בכל push ל־`main` ובכל Pull Request, GitHub Actions מריץ אוטומטית lint, בדיקות, audit, validation ובנייה לשני הדפדפנים. עבור כל תוסף שהשתנה, ה־CI מריץ גם `pnpm zip` ומעלה את קובצי ההתקנה `*-chrome.zip` ו־`*-firefox.zip` כ־workflow artifact בשם `builds-<slug>-<run-id>`, הזמין להורדה למשך 14 ימים. התהליך אינו מפרסם לחנויות ואינו יוצר GitHub Release.
+
 ## הערת audit זמנית
 
 ה־workspace אוכף `minimatch >=11.0.1` כדי לתקן את GHSA-g3hv-75wg-m249. מאחר ש־`web-ext` עדיין מגיע דרך `multimatch@6.0.0`, שמייבא את ברירת המחדל שהוסרה ב־minimatch 11, ה־override מצמיד את התלות הזאת ל־`multimatch@8.0.0`, שמשתמש ב־named import התואם ל־API החדש. כרגע קיימת החרגה יחידה ומנומקת ל־GHSA-gcqx-w48m-w2h4: `deepmerge@4.3.1` מגיע כתלות build-only של `web-ext > addons-linter`, ולפי מאגר הייעוץ אין לו כרגע גרסה מתוקנת. ההחרגה נמצאת ב־`pnpm-workspace.yaml`, לא מעלימה התראות אחרות, ויש להסירה ברגע שהספק יפרסם תיקון. אין להוסיף החרגות audit נוספות ללא נימוק מתועד.
