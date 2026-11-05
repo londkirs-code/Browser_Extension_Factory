@@ -73,7 +73,10 @@ describe("typed storage", () => {
     );
     await expect(storage.get("count")).resolves.toBe(0);
     await storage.set("count", 4);
-    await expect(storage.getAll()).resolves.toEqual({ count: 4, label: "ready" });
+    await expect(storage.getAll()).resolves.toEqual({
+      count: 4,
+      label: "ready",
+    });
     expect(values.count).toBe(4);
   });
 
@@ -101,7 +104,11 @@ describe("typed storage", () => {
 
   it("resets data to declared defaults", async () => {
     const { area, changes } = memoryArea({ count: 9 });
-    const storage = createStorage(area, { defaults: { count: 0 }, version: 1 }, changes);
+    const storage = createStorage(
+      area,
+      { defaults: { count: 0 }, version: 1 },
+      changes,
+    );
     await storage.set("count", 5);
     await storage.reset();
     await expect(storage.get("count")).resolves.toBe(0);
@@ -118,7 +125,10 @@ describe("typed storage", () => {
       changes,
     );
 
-    await expect(storage.getAll()).resolves.toEqual({ count: 1, label: "initial" });
+    await expect(storage.getAll()).resolves.toEqual({
+      count: 1,
+      label: "initial",
+    });
     externalSet({ count: 8, label: "changed elsewhere" });
 
     await expect(storage.get("count")).resolves.toBe(8);
