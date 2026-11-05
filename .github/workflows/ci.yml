@@ -32,6 +32,8 @@ jobs:
           version: 12.16.1
       - name: Install workspace dependencies
         run: pnpm install --frozen-lockfile
+      - name: Verify lockfile is unchanged
+        run: git diff --exit-code -- pnpm-lock.yaml
       - name: Detect affected extensions
         id: detect
         env:
@@ -52,6 +54,8 @@ jobs:
           version: 12.16.1
       - name: Install workspace dependencies
         run: pnpm install --frozen-lockfile
+      - name: Verify lockfile is unchanged
+        run: git diff --exit-code -- pnpm-lock.yaml
       - name: Lint and format
         run: pnpm lint
       - name: Unit tests
@@ -77,6 +81,8 @@ jobs:
           version: 12.16.1
       - name: Install workspace dependencies
         run: pnpm install --frozen-lockfile
+      - name: Verify lockfile is unchanged
+        run: git diff --exit-code -- pnpm-lock.yaml
       - name: Generate a fresh extension non-interactively
         run: >
           pnpm new -- --slug ci-generator-smoke
@@ -129,6 +135,8 @@ jobs:
           version: 12.16.1
       - name: Install workspace dependencies
         run: pnpm install --frozen-lockfile
+      - name: Verify lockfile is unchanged
+        run: git diff --exit-code -- pnpm-lock.yaml
       - name: Build Chrome/Chromium and Firefox
         run: pnpm build "${{ matrix.extension }}"
       - name: Upload browser build outputs
