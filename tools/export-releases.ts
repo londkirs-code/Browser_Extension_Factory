@@ -60,7 +60,8 @@ async function findBrowserArchive(slug: string, browser: ReleaseBrowser): Promis
   const files = (await findZipFiles(outputDir)).sort();
   const marker = new RegExp("(?:^|[-_.])" + browser + "(?:[-_.]|$)", "i");
   const match = files.find((file) => marker.test(path.basename(file)));
-  if (!match) throw new Error("Could not find the " + browser + " ZIP produced by pnpm zip " + slug + ".");
+  if (!match)
+    throw new Error("Could not find the " + browser + " ZIP produced by pnpm zip " + slug + ".");
   return match;
 }
 
@@ -154,7 +155,10 @@ async function exportReleases(requestedSlugs: string[]): Promise<void> {
           firefox: await describeFile(firefoxTarget, firefoxName),
         },
       });
-      await writeFile(path.join(targetDir, "release-info.json"), JSON.stringify(info, null, 2) + "\n");
+      await writeFile(
+        path.join(targetDir, "release-info.json"),
+        JSON.stringify(info, null, 2) + "\n",
+      );
     }
 
     await mkdir(releasesRoot, { recursive: true });

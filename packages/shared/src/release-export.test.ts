@@ -8,12 +8,8 @@ import {
 
 describe("release export helpers", () => {
   it("builds browser-specific release archive names", () => {
-    expect(buildReleaseFileName("page-ocr", "0.1.0", "chrome")).toBe(
-      "page-ocr-0.1.0-chrome.zip",
-    );
-    expect(buildReleaseFileName("page-ocr", "0.1.0", "firefox")).toBe(
-      "page-ocr-0.1.0-firefox.zip",
-    );
+    expect(buildReleaseFileName("page-ocr", "0.1.0", "chrome")).toBe("page-ocr-0.1.0-chrome.zip");
+    expect(buildReleaseFileName("page-ocr", "0.1.0", "firefox")).toBe("page-ocr-0.1.0-firefox.zip");
   });
 
   it("excludes demo and test extensions", () => {
