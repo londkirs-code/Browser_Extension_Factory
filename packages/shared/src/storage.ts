@@ -103,6 +103,10 @@ export class TypedStorage<T extends Record<string, unknown>> {
     this.state = { ...this.options.defaults };
     await this.area.set({ ...this.state, [VERSION_KEY]: this.options.version });
   }
+
+  destroy(): void {
+    this.changes?.removeListener?.(this.changeListener);
+  }
 }
 
 export function createStorage<T extends Record<string, unknown>>(
