@@ -53,13 +53,13 @@ async function patchUnsafeFunctionConstructors(filePath: string): Promise<void> 
 
   let patched = 0;
   let safeSource = source.replace(
-    /Function\((["'\x60])r\1\s*,\s*(["'\x60])regeneratorRuntime = r\2\)\(([A-Za-z_$][\w$]*)\)/g,
+    /Function((["'\x60])r\1\s*,\s*(["'\x60])regeneratorRuntime = r\3\)\(([A-Za-z_$][\w$]*)\)/g,
     (_match, _firstQuote: string, _secondQuote: string, runtimeVariable: string) => {
       patched += 1;
       return "globalThis.regeneratorRuntime = " + runtimeVariable;
     },
   );
-  safeSource = safeSource.replace(/new Function\((["'\x60])return this\1\)\(\)/g, () => {
+  safeSource = safeSource.replace(/new Function((["'\x60])return this\1\)\(\)/g, () => {
     patched += 1;
     return "globalThis";
   });
@@ -137,7 +137,8 @@ export default defineConfig({
     optional_host_permissions: config.optionalHostPermissions,
     icons: { 16: "icons/16.png", 32: "icons/32.png", 48: "icons/48.png", 128: "icons/128.png" },
     content_security_policy: {
-      extension_pages: "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';",
+      extension_pages:
+        "script-src 'self' 'wasm-unsafe-eval'; worker-src 'self'; object-src 'self';",
     },
     ...(browser === "firefox"
       ? {
