@@ -1,5 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
-import { createStorage, type StorageArea, type StorageChange, type StorageChangeEvent } from "./index.js";
+import {
+  createStorage,
+  type StorageArea,
+  type StorageChange,
+  type StorageChangeEvent,
+} from "./index.js";
 
 function memoryArea(initial: Record<string, unknown> = {}) {
   const values = { ...initial };
