@@ -1,11 +1,24 @@
 {
-  "extName": { "message": "__DISPLAY_NAME__", "description": "שם התוסף המוצג בדפדפן." },
-  "extDescription": { "message": "__DESCRIPTION__", "description": "תיאור התוסף המוצג בדפדפן." },
-  "popupTitle": { "message": "התוסף מוכן", "description": "כותרת החלונית." },
-  "popupBody": {
-    "message": "כאן מוסיפים את הפעולה הייחודית של התוסף.",
-    "description": "טקסט פתיחה בחלונית."
+  "extName": { "message": "זיהוי טקסט בעמוד", "description": "שם התוסף המוצג בדפדפן." },
+  "extDescription": {
+    "message": "סמנו אזור בעמוד והעתיקו את הטקסט בעברית או באנגלית באמצעות זיהוי מקומי.",
+    "description": "תיאור התוסף המוצג בדפדפן."
   },
-  "optionsTitle": { "message": "הגדרות", "description": "כותרת מסך ההגדרות." },
-  "optionsDescription": { "message": "הגדרות התוסף.", "description": "תיאור מסך ההגדרות." }
+  "selectArea": {
+    "message": "גררו כדי לסמן אזור. לחצו Esc לביטול.",
+    "description": "הוראות שכבת בחירת האזור."
+  },
+  "resultTitle": { "message": "הטקסט שזוהה", "description": "כותרת חלונית התוצאה." },
+  "copyText": { "message": "העתקת הטקסט", "description": "כפתור העתקת התוצאה." },
+  "copied": { "message": "הטקסט הועתק ללוח", "description": "הודעת הצלחת העתקה." },
+  "copyFailed": {
+    "message": "סמנו את הטקסט והעתיקו אותו ידנית.",
+    "description": "הודעה כאשר ההעתקה נכשלה."
+  },
+  "close": { "message": "סגירה", "description": "כפתור סגירת חלונית התוצאה." },
+  "noText": {
+    "message": "לא נמצא טקסט קריא באזור שסומן.",
+    "description": "מוצג כאשר לא זוהה טקסט."
+  },
+  "ocrFailed": { "message": "זיהוי הטקסט נכשל: {error}", "description": "הודעת שגיאה בזיהוי." }
 }
