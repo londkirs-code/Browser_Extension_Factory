@@ -2,8 +2,8 @@
   "slug": "page-ocr",
   "displayName": "Page OCR",
   "version": "0.1.0",
-  "builtAt": "2026-11-05T06:20:54.697Z",
-  "commitSha": "a9574db8017ea4e04d374cfd4ff4068616a9d6d1",
+  "builtAt": "2026-11-05T06:22:35.252Z",
+  "commitSha": "cf43a990bb9a128e531d99d61425114b2291a99b",
   "files": {
     "chrome": {
       "name": "page-ocr-0.1.0-chrome.zip",
