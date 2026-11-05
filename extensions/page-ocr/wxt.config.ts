@@ -65,6 +65,10 @@ async function copyOcrAssets(): Promise<void> {
     },
   );
   if (patchedFallbacks === 0) {
+    console.error(
+      "Tesseract worker Function snippets:",
+      workerSource.match(/.{0,100}Function.{0,100}/g) ?? [],
+    );
     throw new Error("The expected regenerator-runtime fallback was not found in worker.min.js.");
   }
   await writeFile(workerTarget, safeWorkerSource);
