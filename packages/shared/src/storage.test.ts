@@ -73,10 +73,7 @@ describe("typed storage", () => {
     );
     await expect(storage.get("count")).resolves.toBe(0);
     await storage.set("count", 4);
-    await expect(storage.getAll()).resolves.toEqual({
-      count: 4,
-      label: "ready",
-    });
+    await expect(storage.getAll()).resolves.toEqual({ count: 4, label: "ready" });
     expect(values.count).toBe(4);
   });
 
@@ -104,40 +101,30 @@ describe("typed storage", () => {
 
   it("resets data to declared defaults", async () => {
     const { area, changes } = memoryArea({ count: 9 });
-    const storage = createStorage(
-      area,
-      { defaults: { count: 0 }, version: 1 },
-      changes,
-    );
+    const storage = createStorage(area, { defaults: { count: 0 }, version: 1 }, changes);
     await storage.set("count", 5);
     await storage.reset();
     await expect(storage.get("count")).resolves.toBe(0);
   });
 
-  it(
-    "refreshes the in-memory cache when another context changes storage",
-    async () => {
-      const { area, changes, externalSet, externalRemove } = memoryArea({
-        count: 1,
-        label: "initial",
-      });
-      const storage = createStorage(
-        area,
-        { defaults: { count: 0, label: "default" }, version: 1 },
-        changes,
-      );
+  it("refreshes the in-memory cache when another context changes storage", async () => {
+    const { area, changes, externalSet, externalRemove } = memoryArea({
+      count: 1,
+      label: "initial",
+    });
+    const storage = createStorage(
+      area,
+      { defaults: { count: 0, label: "default" }, version: 1 },
+      changes,
+    );
 
-      await expect(storage.getAll()).resolves.toEqual({
-        count: 1,
-        label: "initial",
-      });
-      externalSet({ count: 8, label: "changed elsewhere" });
+    await expect(storage.getAll()).resolves.toEqual({ count: 1, label: "initial" });
+    externalSet({ count: 8, label: "changed elsewhere" });
 
-      await expect(storage.get("count")).resolves.toBe(8);
-      await expect(storage.get("label")).resolves.toBe("changed elsewhere");
+    await expect(storage.get("count")).resolves.toBe(8);
+    await expect(storage.get("label")).resolves.toBe("changed elsewhere");
 
-      externalRemove("label");
-      await expect(storage.get("label")).resolves.toBe("default");
-    },
-  );
+    externalRemove("label");
+    await expect(storage.get("label")).resolves.toBe("default");
+  });
 });
