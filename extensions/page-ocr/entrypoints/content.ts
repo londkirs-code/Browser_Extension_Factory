@@ -10,6 +10,95 @@ import type { PageOcrMessages } from "../messages.js";
 
 type PageWindow = Window & { __pageOcrSelectionActive?: boolean };
 
+function showResult(
+  text: string,
+  rtl: boolean,
+  message: string,
+  labels: {
+    title: string;
+    copy: string;
+    copied: string;
+    copyFailed: string;
+    close: string;
+  },
+): void {
+  document.getElementById("page-ocr-result-host")?.remove();
+  const host = document.createElement("div");
+  host.id = "page-ocr-result-host";
+  host.style.cssText =
+    "all:initial;position:fixed;inset:0;z-index:2147483647;pointer-events:none;";
+  const shadow = host.attachShadow({ mode: "closed" });
+  shadow.innerHTML = `
+    <style>
+      .panel {
+        position: fixed; right: 20px; bottom: 20px; width: min(460px, calc(100vw - 40px));
+        max-height: min(70vh, 620px); box-sizing: border-box; padding: 16px;
+        display: flex; flex-direction: column; gap: 12px; pointer-events: auto;
+        color: #172033; background: #fff; border: 1px solid #d9dfeb;
+        border-radius: 12px; box-shadow: 0 12px 40px rgba(0,0,0,.24);
+        font: 14px/1.5 system-ui, sans-serif;
+      }
+      .header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+      .title { margin: 0; font-size: 16px; font-weight: 700; }
+      .close { border: 0; background: transparent; color: #536078; font-size: 22px; cursor: pointer; }
+      .message { margin: 0; color: #536078; white-space: pre-wrap; overflow-wrap: anywhere; }
+      textarea {
+        box-sizing: border-box; width: 100%; min-height: 130px; max-height: 42vh;
+        resize: vertical; padding: 10px; border: 1px solid #c8d0df; border-radius: 8px;
+        color: #172033; background: #fff; font: 14px/1.6 system-ui, sans-serif;
+      }
+      .actions { display: flex; align-items: center; gap: 10px; }
+      .copy {
+        border: 0; border-radius: 8px; padding: 9px 14px; background: #1769e0;
+        color: white; font: 600 14px system-ui, sans-serif; cursor: pointer;
+      }
+      .status { color: #536078; font-size: 12px; }
+      button:focus-visible, textarea:focus-visible { outline: 3px solid #80b5ff; outline-offset: 2px; }
+    </style>
+    <section class="panel" role="dialog" aria-modal="false" aria-labelledby="page-ocr-title">
+      <div class="header">
+        <h2 class="title" id="page-ocr-title"></h2>
+        <button class="close" type="button" aria-label="Close">×</button>
+      </div>
+      <p class="message"></p>
+      <textarea readonly spellcheck="false"></textarea>
+      <div class="actions">
+        <button class="copy" type="button"></button>
+        <span class="status" role="status" aria-live="polite"></span>
+      </div>
+    </section>
+  `;
+  const panel = shadow.querySelector<HTMLElement>(".panel")!;
+  const title = shadow.querySelector<HTMLHeadingElement>(".title")!;
+  const messageElement = shadow.querySelector<HTMLParagraphElement>(".message")!;
+  const output = shadow.querySelector<HTMLTextAreaElement>("textarea")!;
+  const copyButton = shadow.querySelector<HTMLButtonElement>(".copy")!;
+  const closeButton = shadow.querySelector<HTMLButtonElement>(".close")!;
+  const status = shadow.querySelector<HTMLSpanElement>(".status")!;
+  panel.dir = rtl ? "rtl" : "ltr";
+  title.textContent = labels.title;
+  messageElement.textContent = message;
+  output.value = text;
+  output.dir = rtl ? "rtl" : "ltr";
+  copyButton.textContent = labels.copy;
+  closeButton.textContent = "×";
+  closeButton.setAttribute("aria-label", labels.close);
+  copyButton.disabled = !text;
+  copyButton.style.opacity = text ? "1" : ".5";
+  copyButton.addEventListener("click", async () => {
+    try {
+      await navigator.clipboard.writeText(output.value);
+      status.textContent = labels.copied;
+    } catch {
+      output.focus();
+      output.select();
+      status.textContent = labels.copyFailed;
+    }
+  });
+  closeButton.addEventListener("click", () => host.remove());
+  document.documentElement.append(host);
+}
+
 export default defineContentScript({
   registration: "runtime",
   matches: [],
@@ -23,6 +112,13 @@ export default defineContentScript({
     );
     const language = getUiLanguage().toLowerCase();
     const rtl = language.startsWith("he");
+    const labels = {
+      title: localize("resultTitle", "Recognized text"),
+      copy: localize("copyText", "Copy text"),
+      copied: localize("copied", "Copied to clipboard"),
+      copyFailed: localize("copyFailed", "Select the text and copy it manually."),
+      close: localize("close", "Close"),
+    };
     const host = document.createElement("div");
     host.style.cssText =
       "all:initial;position:fixed;inset:0;z-index:2147483647;pointer-events:auto;";
@@ -125,9 +221,23 @@ export default defineContentScript({
         const capture = await messenger.send("page-ocr:capture-visible", {});
         if ("error" in capture) throw new Error(capture.error);
         const croppedImage = await cropScreenshot(capture.dataUrl, rect);
-        await messenger.send("page-ocr:recognize", { imageDataUrl: croppedImage });
+        const result = await messenger.send("page-ocr:recognize", {
+          imageDataUrl: croppedImage,
+        });
+        showResult(
+          result.text,
+          rtl,
+          result.text ? "" : localize("noText", "No readable text was found in that area."),
+          labels,
+        );
       } catch (error) {
-        console.error("[Page OCR]", error);
+        const detail = error instanceof Error ? error.message : String(error);
+        showResult(
+          "",
+          rtl,
+          localize("ocrFailed", "OCR failed: {error}").replace("{error}", detail),
+          labels,
+        );
       }
     };
 
