@@ -56,7 +56,7 @@ async function patchUnsafeFunctionConstructors(filePath: string): Promise<void> 
     /Function\((["'\x60])r\1\s*,\s*(["'\x60])regeneratorRuntime = r\2\)\(([A-Za-z_$][\w$]*)\)/g,
     (_match, runtimeVariable: string) => {
       patched += 1;
-      return "globalThis.regeneratorRuntime = " + runtimeVariable + ";";
+      return "globalThis.regeneratorRuntime = " + runtimeVariable;
     },
   );
   safeSource = safeSource.replace(/new Function\((["'\x60])return this\1\)\(\)/g, () => {
