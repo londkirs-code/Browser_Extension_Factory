@@ -129,6 +129,12 @@ Tags use `<extension-slug>-v<semver>`, for example `hello-factory-v1.2.0`. The r
 
 If shell or network access is unavailable, say so. Do not imply tests or builds ran. Push only reviewed complete files, let GitHub Actions execute the checks, inspect its status and logs, then make corrective commits for real failures.
 
+## Generated unsigned release archives
+
+The root `releases/` directory contains the latest unsigned Chrome and Firefox ZIP packages for eligible extensions. The Factory Agent regenerates it automatically only after all checks, both-browser builds, and the frozen-lockfile install check pass. Do not edit `releases/` manually; the next successful Factory Agent run replaces each eligible extension's previous package set with its current version.
+
+The ZIPs in `releases/` are unsigned. Chrome packages are loaded unpacked after extraction. Firefox packages can be loaded temporarily through `about:debugging` and are not permanent installs. The signed Firefox package is available only from the GitHub Release created by the tagged release workflow; AMO submissions remain on their existing signing and publishing paths.
+
 ## Factory Agent workflow
 
 When shell access is unavailable, create a branch named `factory/<topic>`. Every push to that branch runs `tools/factory-run.ts` through GitHub Actions. Read `.factory/report.md` from the same branch to inspect the results. Request a new extension in `.factory/requests/<slug>.json`. This workflow does not run on `main` and never publishes extensions to browser stores.
