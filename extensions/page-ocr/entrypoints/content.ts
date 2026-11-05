@@ -25,8 +25,7 @@ function showResult(
   document.getElementById("page-ocr-result-host")?.remove();
   const host = document.createElement("div");
   host.id = "page-ocr-result-host";
-  host.style.cssText =
-    "all:initial;position:fixed;inset:0;z-index:2147483647;pointer-events:none;";
+  host.style.cssText = "all:initial;position:fixed;inset:0;z-index:2147483647;pointer-events:none;";
   const shadow = host.attachShadow({ mode: "closed" });
   shadow.innerHTML = `
     <style>
