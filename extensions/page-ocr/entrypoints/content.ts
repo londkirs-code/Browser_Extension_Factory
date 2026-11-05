@@ -27,7 +27,10 @@ function getErrorDetails(error: unknown): ErrorDetails {
 }
 
 class OcrStageError extends Error {
-  constructor(readonly stage: OcrStage, readonly originalError: unknown) {
+  constructor(
+    readonly stage: OcrStage,
+    readonly originalError: unknown,
+  ) {
     const details = getErrorDetails(originalError);
     super(`${stage} · ${details.name}: ${details.message}`);
     this.name = details.name;
@@ -254,9 +257,7 @@ export default defineContentScript({
         );
         if ("error" in capture) throw new OcrStageError("capture", capture.error);
 
-        const croppedImage = await runOcrStage("crop", () =>
-          cropScreenshot(capture.dataUrl, rect),
-        );
+        const croppedImage = await runOcrStage("crop", () => cropScreenshot(capture.dataUrl, rect));
         const result = await runOcrStage("recognize", () =>
           messenger.send("page-ocr:recognize", { imageDataUrl: croppedImage }),
         );
@@ -269,14 +270,19 @@ export default defineContentScript({
           labels,
         );
       } catch (error) {
-        const failure = error instanceof OcrStageError ? error : new OcrStageError("capture", error);
+        const failure =
+          error instanceof OcrStageError ? error : new OcrStageError("capture", error);
         const details = getErrorDetails(failure.originalError);
-        console.error("Page OCR failed", {
-          stage: failure.stage,
-          name: details.name,
-          message: details.message,
-          stack: details.stack,
-        }, failure.originalError);
+        console.error(
+          "Page OCR failed",
+          {
+            stage: failure.stage,
+            name: details.name,
+            message: details.message,
+            stack: details.stack,
+          },
+          failure.originalError,
+        );
         showResult(
           "",
           rtl,

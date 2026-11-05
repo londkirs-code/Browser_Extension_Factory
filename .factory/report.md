@@ -1,7 +1,7 @@
 # Factory run report
 
 Overall: FAILED
-Commit before run: b4a115cda13b4d8413b0beba13207dabae112fc7
+Commit before run: 0fbab8a9008e7daa7bd208f948cff7b3e41f5649
 
 | Step                                                             | Result |
 | ---------------------------------------------------------------- | ------ |
@@ -29,7 +29,7 @@ Commit before run: b4a115cda13b4d8413b0beba13207dabae112fc7
   ├─ .output/chrome-mv3/icons/32.png                540 B
   └─ .output/chrome-mv3/icons/48.png                937 B
 Σ Total size: 15.71 kB
-[success] Finished in 408 ms
+[success] Finished in 602 ms
 [log]
 WXT 0.21.5
 [info] Building firefox-mv3 for production with Vite 8.3.5
@@ -40,7 +40,7 @@ WXT 0.21.5
 ⠋ [3/3] popup[K
 ⠙ [3/3] popup[K
 [K[?25h
-[K[?25h[success] Built extension in 179 ms
+[K[?25h[success] Built extension in 246 ms
   ├─ .output/firefox-mv3/manifest.json               826 B
   ├─ .output/firefox-mv3/popup.html                  681 B
   ├─ .output/firefox-mv3/background.js               819 B
@@ -55,7 +55,7 @@ WXT 0.21.5
   ├─ .output/firefox-mv3/icons/32.png                540 B
   └─ .output/firefox-mv3/icons/48.png                937 B
 Σ Total size: 15.86 kB
-[success] Finished in 401 ms
+[success] Finished in 545 ms
 Validation Summary:
 
 errors          0
@@ -72,13 +72,11 @@ WXT 0.21.5
 ⠋ Preparing...[K
 ⠋ [1/3] background[K
 ⠋ [2/3] content[K
-⠋ [3/3] offscreen[K
+⠙ [2/3] content[K
 ⠙ [3/3] offscreen[K
 ⠹ [3/3] offscreen[K
-⠸ [3/3] offscreen[K
-⠼ [3/3] offscreen[K
 [K[?25h
-[K[?25h[fail] Command failed after 950 ms
+[K[?25h[fail] Command failed after 639 ms
 $ tsx tools/cli.ts build-all
 [error] Page OCR build verification failed: no chunks/offscreen-*.js files were emitted for chrome-mv3.
   at assertChromeOffscreenRunListener (wxt.config.ts:92:11)
