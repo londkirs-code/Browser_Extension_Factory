@@ -23,5 +23,5 @@
     "message": "No readable text was found in that area.",
     "description": "Shown when OCR returns no text."
   },
-  "ocrFailed": { "message": "OCR failed: {error}", "description": "OCR error message." }
+  "ocrFailed": { "message": "OCR failed", "description": "OCR error message." }
 }

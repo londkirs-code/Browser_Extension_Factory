@@ -20,5 +20,5 @@
     "message": "לא נמצא טקסט קריא באזור שסומן.",
     "description": "מוצג כאשר לא זוהה טקסט."
   },
-  "ocrFailed": { "message": "זיהוי הטקסט נכשל: {error}", "description": "הודעת שגיאה בזיהוי." }
+  "ocrFailed": { "message": "זיהוי הטקסט נכשל", "description": "הודעת שגיאה בזיהוי." }
 }
