@@ -10,6 +10,7 @@ artifacts/
 !.env.example
 *.xpi
 *.zip
+!releases/**/*.zip
 *.crx
 .DS_Store
 Thumbs.db
