@@ -8,9 +8,7 @@ import {
 
 function memoryArea(initial: Record<string, unknown> = {}) {
   const values = { ...initial };
-  const listeners = new Set<
-    (changes: Record<string, StorageChange>, areaName: string) => void
-  >();
+  const listeners = new Set<(changes: Record<string, StorageChange>, areaName: string) => void>();
   const changes: StorageChangeEvent = {
     addListener(listener) {
       listeners.add(listener);
