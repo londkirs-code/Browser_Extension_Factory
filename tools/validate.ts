@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const iconSizes = [16, 32, 48, 128] as const;
-const broadPermissions = new Set([
+export const broadPermissions = new Set([
   "<all_urls>",
   "tabs",
   "debugger",
@@ -106,7 +106,7 @@ async function scanForSecrets(): Promise<void> {
     throw new Error("Possible hard-coded secret(s) found in: " + findings.join(", "));
 }
 
-function isBroadPattern(value: string): boolean {
+export function isBroadPattern(value: string): boolean {
   return (
     value === "<all_urls>" ||
     value === "http://*/*" ||

@@ -7,6 +7,7 @@ import { createInterface } from "node:readline/promises";
 import { spawnSync } from "node:child_process";
 import { stdin as input, stdout as output } from "node:process";
 import { generateIconsForExtension } from "./generate-icons.js";
+import { broadPermissions, isBroadPattern } from "./validate.js";
 
 type Features = { popup: boolean; options: boolean; contentScript: boolean; background: boolean };
 type Answers = {
@@ -202,11 +203,7 @@ async function collectAnswers(options: CliOptions): Promise<Answers> {
       ...optionalPermissions,
       ...hostPermissions,
       ...optionalHostPermissions,
-    ].filter((permission) =>
-      ["<all_urls>", "tabs", "debugger", "webRequest", "http://*/*", "https://*/*"].includes(
-        permission,
-      ),
-    );
+    ].filter((permission) => broadPermissions.has(permission) || isBroadPattern(permission));
     const justification = broad.length
       ? await ask(
           `Justification for broad permissions (${broad.join(", ")}): `,

@@ -122,3 +122,7 @@ Tags use `<extension-slug>-v<semver>`, for example `hello-factory-v1.2.0`. The r
 ## When the execution environment is limited
 
 If shell or network access is unavailable, say so. Do not imply tests or builds ran. Push only reviewed complete files, let GitHub Actions execute the checks, inspect its status and logs, then make corrective commits for real failures.
+
+## Factory Agent workflow
+
+When shell access is unavailable, create a branch named `factory/<topic>`. Every push to that branch runs `tools/factory-run.ts` through GitHub Actions. Read `.factory/report.md` from the same branch to inspect the results. Request a new extension in `.factory/requests/<slug>.json`. This workflow does not run on `main` and never publishes extensions to browser stores.

@@ -1,0 +1,42 @@
+name: Factory Agent
+
+# Runs on branches named factory/**. Lets a model that can only edit files on GitHub
+# scaffold extensions, sync the lockfile, format, test and build with no human steps.
+# It never runs on main, never publishes to stores, and never creates release tags.
+on:
+  push:
+    branches:
+      - "factory/**"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: factory-agent-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  run:
+    name: Scaffold, verify and report
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 12.16.1
+      - name: Run factory pipeline
+        run: pnpm exec tsx tools/factory-run.ts
+      - name: Commit generated files, lockfile, formatting and report to this branch
+        if: always()
+        shell: bash
+        run: |
+          if [[ -n "$(git status --porcelain)" ]]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add --all
+            git commit -m "chore(factory): automated scaffold, lockfile, format and report"
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi
