@@ -1,11 +1,10 @@
 # Factory run report
 
 Overall: ALL CHECKS PASSED
-Commit before run: 74fd84e679b6dfcc42197281fbcb7522e5603baa
+Commit before run: d41257afb7824a9d4252b704ad7122a7af44bba2
 
 | Step                                       | Result |
 | ------------------------------------------ | ------ |
-| scaffold page-ocr (pnpm new)               | PASS   |
 | sync lockfile (pnpm install)               | PASS   |
 | lint                                       | PASS   |
 | test                                       | PASS   |

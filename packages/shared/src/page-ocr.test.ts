@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { createSelectionRect, getImageCropRect, isUsableSelection } from "../../../extensions/page-ocr/geometry.js";
+import {
+  createSelectionRect,
+  getImageCropRect,
+  isUsableSelection,
+} from "../../../extensions/page-ocr/geometry.js";
 import { cleanRecognizedText } from "../../../extensions/page-ocr/text.js";
 
 describe("Page OCR geometry", () => {
@@ -27,9 +31,7 @@ describe("Page OCR geometry", () => {
   });
 
   it("scales a crop by the screenshot-to-viewport width ratio", () => {
-    expect(
-      getImageCropRect({ left: 10, top: 20, width: 50, height: 60 }, 2000, 1000),
-    ).toEqual({
+    expect(getImageCropRect({ left: 10, top: 20, width: 50, height: 60 }, 2000, 1000)).toEqual({
       sx: 20,
       sy: 40,
       sw: 100,
@@ -40,9 +42,10 @@ describe("Page OCR geometry", () => {
   });
 
   it("enlarges short crops by no more than three times", () => {
-    expect(
-      getImageCropRect({ left: 0, top: 0, width: 30, height: 10 }, 1000, 1000),
-    ).toMatchObject({ outputWidth: 90, outputHeight: 30 });
+    expect(getImageCropRect({ left: 0, top: 0, width: 30, height: 10 }, 1000, 1000)).toMatchObject({
+      outputWidth: 90,
+      outputHeight: 30,
+    });
   });
 });
 
