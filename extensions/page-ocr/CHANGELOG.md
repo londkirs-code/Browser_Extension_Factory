@@ -2,8 +2,11 @@
 
 All notable changes to this extension are documented here.
 
-## [0.1.0] - YYYY-MM-DD
+## [0.1.0] - 2026-11-05
 
 ### Added
 
-- Initial Manifest V3 scaffold for Chromium and Firefox.
+- Select a visible page area and crop its screenshot locally.
+- Recognize Hebrew and English text with a bundled Tesseract.js engine.
+- Display OCR results in a localized panel and copy them to the clipboard.
+- Provide an error message and a manual-copy fallback when clipboard access is unavailable.
