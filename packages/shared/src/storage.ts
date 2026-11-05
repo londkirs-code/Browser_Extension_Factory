@@ -1,3 +1,4 @@
+import { getStorageChangeEvent, type StorageChangeEvent, type StorageChange } from "./browser.js";
 import type { StorageArea } from "./browser.js";
 
 const VERSION_KEY = "__browser_extension_factory_storage_version";
@@ -8,20 +9,37 @@ export type StorageOptions<T extends Record<string, unknown>> = {
   defaults: T;
   version: number;
   migrations?: Record<number, StorageMigration<T>>;
+  areaName?: string;
 };
 
 export class TypedStorage<T extends Record<string, unknown>> {
   private state: T;
   private initialized: Promise<void> | undefined;
+  private readonly externalChanges: Record<string, StorageChange> = {};
+  private readonly changeListener: (
+    changes: Record<string, StorageChange>,
+    areaName: string,
+  ) => void;
 
   constructor(
     private readonly area: StorageArea,
     private readonly options: StorageOptions<T>,
+    private readonly changes: StorageChangeEvent | undefined = getStorageChangeEvent(),
   ) {
     if (!Number.isInteger(options.version) || options.version < 1) {
       throw new Error("Storage schema version must be a positive integer.");
     }
     this.state = { ...options.defaults };
+    this.changeListener = (changes, areaName) => {
+      if (areaName !== (this.options.areaName ?? "local")) return;
+      for (const [key, change] of Object.entries(changes)) {
+        if (!(key in this.options.defaults)) continue;
+        this.externalChanges[key] = change;
+        (this.state as Record<string, unknown>)[key] =
+          change.newValue === undefined ? this.options.defaults[key] : change.newValue;
+      }
+    };
+    this.changes?.addListener(this.changeListener);
   }
 
   private async initialize(): Promise<void> {
@@ -43,8 +61,14 @@ export class TypedStorage<T extends Record<string, unknown>> {
       const migration = this.options.migrations?.[nextVersion];
       if (migration) migrated = await migration(migrated);
     }
+
+    for (const [key, change] of Object.entries(this.externalChanges)) {
+      (migrated as Record<string, unknown>)[key] =
+        change.newValue === undefined ? this.options.defaults[key] : change.newValue;
+    }
     this.state = migrated;
     await this.area.set({ ...migrated, [VERSION_KEY]: this.options.version });
+    for (const key of Object.keys(this.externalChanges)) delete this.externalChanges[key];
   }
 
   private async ready(): Promise<void> {
@@ -84,6 +108,7 @@ export class TypedStorage<T extends Record<string, unknown>> {
 export function createStorage<T extends Record<string, unknown>>(
   area: StorageArea,
   options: StorageOptions<T>,
+  changes?: StorageChangeEvent,
 ): TypedStorage<T> {
-  return new TypedStorage(area, options);
+  return new TypedStorage(area, options, changes);
 }

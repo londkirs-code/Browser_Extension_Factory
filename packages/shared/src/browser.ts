@@ -4,8 +4,18 @@ export interface StorageArea {
   remove(keys: string | string[]): Promise<void>;
 }
 
+export interface StorageChange {
+  oldValue?: unknown;
+  newValue?: unknown;
+}
+
+export interface StorageChangeEvent {
+  addListener(listener: (changes: Record<string, StorageChange>, areaName: string) => void): void;
+  removeListener?(listener: (changes: Record<string, StorageChange>, areaName: string) => void): void;
+}
+
 export interface ExtensionApi {
-  storage?: { local?: StorageArea };
+  storage?: { local?: StorageArea; onChanged?: StorageChangeEvent };
   i18n?: {
     getMessage(messageName: string, substitutions?: string | string[]): string;
     getUILanguage?(): string;
@@ -32,6 +42,11 @@ export function resolveExtensionApi(scope: ExtensionScope): ExtensionApi {
 
 export function getExtensionApi(): ExtensionApi {
   return resolveExtensionApi(globalThis as typeof globalThis & ExtensionScope);
+}
+
+export function getStorageChangeEvent(): StorageChangeEvent | undefined {
+  const scope = globalThis as typeof globalThis & ExtensionScope;
+  return (scope.browser ?? scope.chrome)?.storage?.onChanged;
 }
 
 export async function asPromise<T>(value: T | Promise<T>): Promise<T> {
