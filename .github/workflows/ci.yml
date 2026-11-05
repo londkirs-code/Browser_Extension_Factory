@@ -137,14 +137,14 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Verify lockfile is unchanged
         run: git diff --exit-code -- pnpm-lock.yaml
-      - name: Build Chrome/Chromium and Firefox
-        run: pnpm build "${{ matrix.extension }}"
-      - name: Upload browser build outputs
+      - name: Build and package Chrome/Chromium and Firefox
+        run: pnpm zip "${{ matrix.extension }}"
+      - name: Upload installable browser ZIPs
         uses: actions/upload-artifact@v7
         with:
           name: builds-${{ matrix.extension }}-${{ github.run_id }}
           path: |
-            extensions/${{ matrix.extension }}/.output/chrome-mv3/**
-            extensions/${{ matrix.extension }}/.output/firefox-mv3/**
+            extensions/${{ matrix.extension }}/.output/*-chrome.zip
+            extensions/${{ matrix.extension }}/.output/*-firefox.zip
           if-no-files-found: error
           retention-days: 14
