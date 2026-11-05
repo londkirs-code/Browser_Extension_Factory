@@ -97,7 +97,7 @@ function writeReport(): boolean {
 }
 
 scaffold();
-let checksPassed = true;
+let checksPassed = results.every((result) => result.ok);
 checksPassed =
   run("sync lockfile (pnpm install)", ["install", "--no-frozen-lockfile"]) && checksPassed;
 checksPassed =
@@ -111,7 +111,7 @@ checksPassed = run("build all (Chrome + Firefox, web-ext lint)", ["build:all"]) 
 checksPassed = run("frozen install check", ["install", "--frozen-lockfile"]) && checksPassed;
 
 if (checksPassed) {
-  checksPassed = run("export unsigned browser releases", ["export:releases"]) && checksPassed;
+  run("export unsigned browser releases", ["export:releases"]);
 } else {
   results.push({
     title: "export unsigned browser releases (skipped: earlier check failed)",
