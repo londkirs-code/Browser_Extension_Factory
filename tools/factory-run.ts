@@ -98,8 +98,10 @@ function writeReport(): boolean {
 
 scaffold();
 let checksPassed = true;
-checksPassed = run("sync lockfile (pnpm install)", ["install", "--no-frozen-lockfile"]) && checksPassed;
-checksPassed = run("format (prettier --write)", ["exec", "prettier", "--write", "."]) && checksPassed;
+checksPassed =
+  run("sync lockfile (pnpm install)", ["install", "--no-frozen-lockfile"]) && checksPassed;
+checksPassed =
+  run("format (prettier --write)", ["exec", "prettier", "--write", "."]) && checksPassed;
 checksPassed = run("lint", ["lint"]) && checksPassed;
 checksPassed = run("test", ["test"]) && checksPassed;
 checksPassed = run("audit", ["audit"]) && checksPassed;

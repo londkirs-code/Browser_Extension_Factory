@@ -82,9 +82,16 @@ async function walk(directory: string): Promise<string[]> {
   const results: string[] = [];
   for (const entry of entries) {
     if (
-      [".git", "node_modules", ".output", ".wxt", "coverage", "dist", "artifacts", "releases"].includes(
-        entry.name,
-      )
+      [
+        ".git",
+        "node_modules",
+        ".output",
+        ".wxt",
+        "coverage",
+        "dist",
+        "artifacts",
+        "releases",
+      ].includes(entry.name)
     )
       continue;
     const absolute = path.join(directory, entry.name);
