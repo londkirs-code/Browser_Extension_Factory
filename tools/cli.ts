@@ -79,7 +79,19 @@ async function buildOne(slug: string): Promise<void> {
   runWxt(slug, ["build", "-b", "firefox", "--mv3"]);
   await validateExtension(slug, { requireBuilt: true });
   const firefoxOutput = path.join(directory, ".output", "firefox-mv3");
-  runPnpm(["exec", "web-ext", "lint", "--source-dir", firefoxOutput, "--warnings-as-errors"]);
+  try {
+    runPnpm(["exec", "web-ext", "lint", "--source-dir", firefoxOutput, "--warnings-as-errors"]);
+  } catch (error) {
+    if (slug === "page-ocr") {
+      const workerSource = await readFile(path.join(firefoxOutput, "vendor/ocr/worker.min.js"), "utf8");
+      const lines = workerSource.split("\\n");
+      console.error("OCR worker syntax context:", {
+        line1: lines[0]?.slice(7750, 7950),
+        line2: lines[1]?.slice(6860, 7060),
+      });
+    }
+    throw error;
+  }
   for (const browser of ["chrome", "firefox"]) {
     const output = path.join(
       directory,
