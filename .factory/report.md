@@ -1,7 +1,7 @@
 # Factory run report
 
 Overall: FAILED
-Commit before run: 8ea0131ed5a50ed7e2790ff87e373886559bea9c
+Commit before run: 0ae3aa71646fa2007622440a421e90f681ee714a
 
 | Step                                              | Result |
 | ------------------------------------------------- | ------ |
@@ -18,64 +18,64 @@ Commit before run: 8ea0131ed5a50ed7e2790ff87e373886559bea9c
 ## Failure: build all (Chrome + Firefox, web-ext lint)
 
 ```
-  ├─ .output/firefox-mv3/popup.html                  681 B
-  ├─ .output/firefox-mv3/background.js               819 B
-  ├─ .output/firefox-mv3/chunks/popup-DsWQ67JC.js    3.67 kB
-  ├─ .output/firefox-mv3/content-scripts/content.js  3.75 kB
-  ├─ .output/firefox-mv3/assets/popup-4HrTtUNa.css   560 B
-  ├─ .output/firefox-mv3/_locales/en/messages.json   615 B
-  ├─ .output/firefox-mv3/_locales/he/messages.json   705 B
-  ├─ .output/firefox-mv3/icon.svg                    341 B
-  ├─ .output/firefox-mv3/icons/128.png               2.06 kB
-  ├─ .output/firefox-mv3/icons/16.png                360 B
-  ├─ .output/firefox-mv3/icons/32.png                540 B
-  └─ .output/firefox-mv3/icons/48.png                937 B
-Σ Total size: 15.86 kB
-[success] Finished in 334 ms
+  ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core-simd.wasm.js              4.69 MB
+  ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core.js                        88.97 kB
+  ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core.wasm.js                   4.69 MB
+  ├─ .output/firefox-mv3/vendor/ocr/worker.min.js                                 111.30 kB
+  ├─ .output/firefox-mv3/_locales/en/messages.json                                1.12 kB
+  ├─ .output/firefox-mv3/_locales/he/messages.json                                1.43 kB
+  ├─ .output/firefox-mv3/icon.svg                                                 341 B
+  ├─ .output/firefox-mv3/icons/128.png                                            2.06 kB
+  ├─ .output/firefox-mv3/icons/16.png                                             360 B
+  ├─ .output/firefox-mv3/icons/32.png                                             540 B
+  ├─ .output/firefox-mv3/icons/48.png                                             937 B
+  ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core-lstm.wasm                 2.86 MB
+  ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core-relaxedsimd-lstm.wasm     2.86 MB
+  ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core-relaxedsimd.wasm          3.46 MB
+  ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core-simd-lstm.wasm            2.86 MB
+  ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core-simd.wasm                 3.45 MB
+  ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core.wasm                      3.45 MB
+  ├─ .output/firefox-mv3/vendor/ocr/lang/eng.traineddata.gz                       2.95 MB
+  └─ .output/firefox-mv3/vendor/ocr/lang/heb.traineddata.gz                       580.58 kB
+Σ Total size: 48.93 MB
+[success] Finished in 783 ms
 Validation Summary:
 
 errors          0
 notices         0
-warnings        0
+warnings        2
 
-hello-factory chrome bundle: 15.3 KB
-hello-factory firefox bundle: 15.5 KB
-Building page-ocr for Chrome/Chromium and Firefox.
-[log]
-WXT 0.21.5
-[fail] Command failed after 212 ms
+WARNINGS:
+
+Code             Message       Description              File          Line   C
+DANGEROUS_EVAL   The           Evaluation of strings    background…   1      7
+                 Function      as code can lead to      .js
+                 constructor   security
+                 is eval.      vulnerabilities and
+                               performance issues,
+                               even in the most
+                               innocuous of
+                               circumstances. Please
+                               avoid using `eval` and
+                               the `Function`
+                               constructor when at
+                               all possible.
+DANGEROUS_EVAL   The           Evaluation of strings    vendor/ocr…   2      1
+                 Function      as code can lead to      /worker.mi…
+                 constructor   security                 n.js
+                 is eval.      vulnerabilities and
+                               performance issues,
+                               even in the most
+                               innocuous of
+                               circumstances. Please
+                               avoid using `eval` and
+                               the `Function`
+                               constructor when at
+                               all possible.
 $ tsx tools/cli.ts build-all
-Tesseract worker Function snippets: [
-  'alue:m,configurable:!0}),o(m,"constructor",{value:w,configurable:!0}),w.displayName=f(m,h,"GeneratorFunction"),t.isGeneratorFunction=function(t){var e="function"==typeof t&&t.constructor;return!!e&&(e===w||"G',
-  'eneratorFunction"===(e.displayName||e.name))},t.mark=function(t){return Object.setPrototypeOf?Object.setPrototypeOf(',
-  't,m):(t.__proto__=m,f(t,h,"GeneratorFunction")),t.prototype=Object.create(k),t},t.awrap=function(t){return{__await:t}},O(I.prototype),f(I.protot',
-  'I,t.async=function(e,r,n,i,o){void 0===o&&(o=Promise);var a=new I(c(e,r,n,i),o);return t.isGeneratorFunction(r)?a:a.next().then((function(t){return t.done?t.value:a.next()}))},O(k),f(k,h,"Generator"),f(k,s,(f',
-  'bject"===("undefined"==typeof globalThis?"undefined":n(globalThis))?globalThis.regeneratorRuntime=i:Function("r","regeneratorRuntime = r")(i)}},54:t=>{"use strict";t.exports={COLOR:0,GREY:1,BINARY:2}},65:func',
-  '1,4,1,96,0,0,3,2,1,0,5,4,1,3,1,1,10,11,1,9,0,65,0,254,16,2,0,26,11])),typeReflection:()=>(async()=>"Function"in WebAssembly)(),typedFunctionReferences:()=>(async()=>{try{return new WebAssembly.Module(Uint8Arr',
-  'alue:A,configurable:!0}),o(A,"constructor",{value:m,configurable:!0}),m.displayName=c(A,f,"GeneratorFunction"),e.isGeneratorFunction=function(t){var e="function"==typeof t&&t.constructor;return!!e&&(e===m||"G',
-  'eneratorFunction"===(e.displayName||e.name))},e.mark=function(t){return Object.setPrototypeOf?Object.setPrototypeOf(',
-  't,A):(t.__proto__=A,c(t,f,"GeneratorFunction")),t.prototype=Object.create(O),t},e.awrap=function(t){return{__await:t}},I(U.prototype),c(U.protot',
-  'U,e.async=function(t,r,n,i,o){void 0===o&&(o=Promise);var a=new U(l(t,r,n,i),o);return e.isGeneratorFunction(r)?a:a.next().then((function(t){return t.done?t.value:a.next()}))},I(O),c(O,f,"Generator"),c(O,s,(f',
-  'alue:A,configurable:!0}),a(A,"constructor",{value:m,configurable:!0}),m.displayName=c(A,f,"GeneratorFunction"),e.isGeneratorFunction=function(t){var e="function"==typeof t&&t.constructor;return!!e&&(e===m||"G',
-  'eneratorFunction"===(e.displayName||e.name))},e.mark=function(t){return Object.setPrototypeOf?Object.setPrototypeOf(',
-  't,A):(t.__proto__=A,c(t,f,"GeneratorFunction")),t.prototype=Object.create(O),t},e.awrap=function(t){return{__await:t}},I(U.prototype),c(U.protot',
-  'U,e.async=function(t,r,n,i,o){void 0===o&&(o=Promise);var a=new U(l(t,r,n,i),o);return e.isGeneratorFunction(r)?a:a.next().then((function(t){return t.done?t.value:a.next()}))},I(O),c(O,f,"Generator"),c(O,u,(f',
-  '!0,get:e[n]})},r.g=function(){if("object"==typeof globalThis)return globalThis;try{return this||new Function("return this")()}catch(t){if("object"==typeof window)return window}}(),r.o=(t,e)=>Object.prototype.'
-]
-[error] The expected regenerator-runtime fallback was not found in worker.min.js.
-  at copyOcrAssets (wxt.config.ts:72:11)
-  at async build:before (wxt.config.ts:106:7)
-  at async internalBuild (/home/runner/work/Browser_Extension_Factory/Browser_Extension_Factory/node_modules/.pnpm/wxt@0.21.5_@typescript+typescript6@6.0.2_esbuild@0.28.2_eslint@10.14.0_jiti@2.7.0_suppo_b3527d754d373973afc8b162b61d85db/node_modules/wxt/dist/internal/internal-build.mjs:30:2)
-  at async build (/home/runner/work/Browser_Extension_Factory/Browser_Extension_Factory/node_modules/.pnpm/wxt@0.21.5_@typescript+typescript6@6.0.2_esbuild@0.28.2_eslint@10.14.0_jiti@2.7.0_suppo_b3527d754d373973afc8b162b61d85db/node_modules/wxt/dist/build.mjs:20:9)
-  at async /home/runner/work/Browser_Extension_Factory/Browser_Extension_Factory/node_modules/.pnpm/wxt@0.21.5_@typescript+typescript6@6.0.2_esbuild@0.28.2_eslint@10.14.0_jiti@2.7.0_suppo_b3527d754d373973afc8b162b61d85db/node_modules/wxt/dist/cli/commands.mjs:31:2
-  at async CAC.<anonymous> (/home/runner/work/Browser_Extension_Factory/Browser_Extension_Factory/node_modules/.pnpm/wxt@0.21.5_@typescript+typescript6@6.0.2_esbuild@0.28.2_eslint@10.14.0_jiti@2.7.0_suppo_b3527d754d373973afc8b162b61d85db/node_modules/wxt/dist/cli/cli-utils.mjs:22:10)
-  at async /home/runner/work/Browser_Extension_Factory/Browser_Extension_Factory/node_modules/.pnpm/wxt@0.21.5_@typescript+typescript6@6.0.2_esbuild@0.28.2_eslint@10.14.0_jiti@2.7.0_suppo_b3527d754d373973afc8b162b61d85db/node_modules/wxt/dist/cli/index.mjs:11:1
-Error: ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL
-
-  × "pnpm recursive exec" failed in /home/runner/work/
-  │ Browser_Extension_Factory/Browser_Extension_Factory/extensions/page-ocr
-
-Command failed (1): pnpm --filter @extensions/page-ocr exec wxt build -b chrome --mv3
+[warn] The following entrypoints have been skipped:
+- offscreen
+Command failed (1): pnpm exec web-ext lint --source-dir /home/runner/work/Browser_Extension_Factory/Browser_Extension_Factory/extensions/page-ocr/.output/firefox-mv3 --warnings-as-errors
 [ELIFECYCLE] Command failed with exit code 1.
 
 ```
@@ -83,42 +83,64 @@ Command failed (1): pnpm --filter @extensions/page-ocr exec wxt build -b chrome 
 ## Failure: package page-ocr (Chrome + Firefox + source ZIPs)
 
 ```
-Building page-ocr for Chrome/Chromium and Firefox.
-[log]
-WXT 0.21.5
-[fail] Command failed after 211 ms
+  ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core-simd.wasm.js              4.69 MB
+  ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core.js                        88.97 kB
+  ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core.wasm.js                   4.69 MB
+  ├─ .output/firefox-mv3/vendor/ocr/worker.min.js                                 111.30 kB
+  ├─ .output/firefox-mv3/_locales/en/messages.json                                1.12 kB
+  ├─ .output/firefox-mv3/_locales/he/messages.json                                1.43 kB
+  ├─ .output/firefox-mv3/icon.svg                                                 341 B
+  ├─ .output/firefox-mv3/icons/128.png                                            2.06 kB
+  ├─ .output/firefox-mv3/icons/16.png                                             360 B
+  ├─ .output/firefox-mv3/icons/32.png                                             540 B
+  ├─ .output/firefox-mv3/icons/48.png                                             937 B
+  ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core-lstm.wasm                 2.86 MB
+  ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core-relaxedsimd-lstm.wasm     2.86 MB
+  ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core-relaxedsimd.wasm          3.46 MB
+  ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core-simd-lstm.wasm            2.86 MB
+  ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core-simd.wasm                 3.45 MB
+  ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core.wasm                      3.45 MB
+  ├─ .output/firefox-mv3/vendor/ocr/lang/eng.traineddata.gz                       2.95 MB
+  └─ .output/firefox-mv3/vendor/ocr/lang/heb.traineddata.gz                       580.58 kB
+Σ Total size: 48.93 MB
+[success] Finished in 879 ms
+Validation Summary:
+
+errors          0
+notices         0
+warnings        2
+
+WARNINGS:
+
+Code             Message       Description              File          Line   C
+DANGEROUS_EVAL   The           Evaluation of strings    background…   1      7
+                 Function      as code can lead to      .js
+                 constructor   security
+                 is eval.      vulnerabilities and
+                               performance issues,
+                               even in the most
+                               innocuous of
+                               circumstances. Please
+                               avoid using `eval` and
+                               the `Function`
+                               constructor when at
+                               all possible.
+DANGEROUS_EVAL   The           Evaluation of strings    vendor/ocr…   2      1
+                 Function      as code can lead to      /worker.mi…
+                 constructor   security                 n.js
+                 is eval.      vulnerabilities and
+                               performance issues,
+                               even in the most
+                               innocuous of
+                               circumstances. Please
+                               avoid using `eval` and
+                               the `Function`
+                               constructor when at
+                               all possible.
 $ tsx tools/cli.ts zip page-ocr
-Tesseract worker Function snippets: [
-  'alue:m,configurable:!0}),o(m,"constructor",{value:w,configurable:!0}),w.displayName=f(m,h,"GeneratorFunction"),t.isGeneratorFunction=function(t){var e="function"==typeof t&&t.constructor;return!!e&&(e===w||"G',
-  'eneratorFunction"===(e.displayName||e.name))},t.mark=function(t){return Object.setPrototypeOf?Object.setPrototypeOf(',
-  't,m):(t.__proto__=m,f(t,h,"GeneratorFunction")),t.prototype=Object.create(k),t},t.awrap=function(t){return{__await:t}},O(I.prototype),f(I.protot',
-  'I,t.async=function(e,r,n,i,o){void 0===o&&(o=Promise);var a=new I(c(e,r,n,i),o);return t.isGeneratorFunction(r)?a:a.next().then((function(t){return t.done?t.value:a.next()}))},O(k),f(k,h,"Generator"),f(k,s,(f',
-  'bject"===("undefined"==typeof globalThis?"undefined":n(globalThis))?globalThis.regeneratorRuntime=i:Function("r","regeneratorRuntime = r")(i)}},54:t=>{"use strict";t.exports={COLOR:0,GREY:1,BINARY:2}},65:func',
-  '1,4,1,96,0,0,3,2,1,0,5,4,1,3,1,1,10,11,1,9,0,65,0,254,16,2,0,26,11])),typeReflection:()=>(async()=>"Function"in WebAssembly)(),typedFunctionReferences:()=>(async()=>{try{return new WebAssembly.Module(Uint8Arr',
-  'alue:A,configurable:!0}),o(A,"constructor",{value:m,configurable:!0}),m.displayName=c(A,f,"GeneratorFunction"),e.isGeneratorFunction=function(t){var e="function"==typeof t&&t.constructor;return!!e&&(e===m||"G',
-  'eneratorFunction"===(e.displayName||e.name))},e.mark=function(t){return Object.setPrototypeOf?Object.setPrototypeOf(',
-  't,A):(t.__proto__=A,c(t,f,"GeneratorFunction")),t.prototype=Object.create(O),t},e.awrap=function(t){return{__await:t}},I(U.prototype),c(U.protot',
-  'U,e.async=function(t,r,n,i,o){void 0===o&&(o=Promise);var a=new U(l(t,r,n,i),o);return e.isGeneratorFunction(r)?a:a.next().then((function(t){return t.done?t.value:a.next()}))},I(O),c(O,f,"Generator"),c(O,s,(f',
-  'alue:A,configurable:!0}),a(A,"constructor",{value:m,configurable:!0}),m.displayName=c(A,f,"GeneratorFunction"),e.isGeneratorFunction=function(t){var e="function"==typeof t&&t.constructor;return!!e&&(e===m||"G',
-  'eneratorFunction"===(e.displayName||e.name))},e.mark=function(t){return Object.setPrototypeOf?Object.setPrototypeOf(',
-  't,A):(t.__proto__=A,c(t,f,"GeneratorFunction")),t.prototype=Object.create(O),t},e.awrap=function(t){return{__await:t}},I(U.prototype),c(U.protot',
-  'U,e.async=function(t,r,n,i,o){void 0===o&&(o=Promise);var a=new U(l(t,r,n,i),o);return e.isGeneratorFunction(r)?a:a.next().then((function(t){return t.done?t.value:a.next()}))},I(O),c(O,f,"Generator"),c(O,u,(f',
-  '!0,get:e[n]})},r.g=function(){if("object"==typeof globalThis)return globalThis;try{return this||new Function("return this")()}catch(t){if("object"==typeof window)return window}}(),r.o=(t,e)=>Object.prototype.'
-]
-[error] The expected regenerator-runtime fallback was not found in worker.min.js.
-  at copyOcrAssets (wxt.config.ts:72:11)
-  at async build:before (wxt.config.ts:106:7)
-  at async internalBuild (/home/runner/work/Browser_Extension_Factory/Browser_Extension_Factory/node_modules/.pnpm/wxt@0.21.5_@typescript+typescript6@6.0.2_esbuild@0.28.2_eslint@10.14.0_jiti@2.7.0_suppo_b3527d754d373973afc8b162b61d85db/node_modules/wxt/dist/internal/internal-build.mjs:30:2)
-  at async build (/home/runner/work/Browser_Extension_Factory/Browser_Extension_Factory/node_modules/.pnpm/wxt@0.21.5_@typescript+typescript6@6.0.2_esbuild@0.28.2_eslint@10.14.0_jiti@2.7.0_suppo_b3527d754d373973afc8b162b61d85db/node_modules/wxt/dist/build.mjs:20:9)
-  at async /home/runner/work/Browser_Extension_Factory/Browser_Extension_Factory/node_modules/.pnpm/wxt@0.21.5_@typescript+typescript6@6.0.2_esbuild@0.28.2_eslint@10.14.0_jiti@2.7.0_suppo_b3527d754d373973afc8b162b61d85db/node_modules/wxt/dist/cli/commands.mjs:31:2
-  at async CAC.<anonymous> (/home/runner/work/Browser_Extension_Factory/Browser_Extension_Factory/node_modules/.pnpm/wxt@0.21.5_@typescript+typescript6@6.0.2_esbuild@0.28.2_eslint@10.14.0_jiti@2.7.0_suppo_b3527d754d373973afc8b162b61d85db/node_modules/wxt/dist/cli/cli-utils.mjs:22:10)
-  at async /home/runner/work/Browser_Extension_Factory/Browser_Extension_Factory/node_modules/.pnpm/wxt@0.21.5_@typescript+typescript6@6.0.2_esbuild@0.28.2_eslint@10.14.0_jiti@2.7.0_suppo_b3527d754d373973afc8b162b61d85db/node_modules/wxt/dist/cli/index.mjs:11:1
-Error: ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL
-
-  × "pnpm recursive exec" failed in /home/runner/work/
-  │ Browser_Extension_Factory/Browser_Extension_Factory/extensions/page-ocr
-
-Command failed (1): pnpm --filter @extensions/page-ocr exec wxt build -b chrome --mv3
+[warn] The following entrypoints have been skipped:
+- offscreen
+Command failed (1): pnpm exec web-ext lint --source-dir /home/runner/work/Browser_Extension_Factory/Browser_Extension_Factory/extensions/page-ocr/.output/firefox-mv3 --warnings-as-errors
 [ELIFECYCLE] Command failed with exit code 1.
 
 ```
