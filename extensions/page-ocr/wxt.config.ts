@@ -58,7 +58,7 @@ async function copyOcrAssets(): Promise<void> {
   const workerSource = await readFile(workerTarget, "utf8");
   let patchedFallbacks = 0;
   const safeWorkerSource = workerSource.replace(
-    /Function\((['"])r\\1\\s*,\\s*(['"])regeneratorRuntime = r\\2\\)\\(runtime\\);?/g,
+    /Function\((['"])r\1\s*,\s*(['"])regeneratorRuntime = r\2\)\(runtime\);?/g,
     () => {
       patchedFallbacks += 1;
       return "globalThis.regeneratorRuntime = runtime;";
