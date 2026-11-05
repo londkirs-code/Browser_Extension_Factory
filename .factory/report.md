@@ -82,7 +82,7 @@ WXT 0.21.5
 $ tsx tools/cli.ts build-all
 [warn] The following entrypoints have been skipped:
 - offscreen
-chrome: extension_pages CSP is missing or too permissive.
+Command failed (1): pnpm exec web-ext lint --source-dir /home/runner/work/Browser_Extension_Factory/Browser_Extension_Factory/extensions/page-ocr/.output/firefox-mv3 --warnings-as-errors
 [ELIFECYCLE] Command failed with exit code 1.
 
 ```
