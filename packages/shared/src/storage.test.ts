@@ -114,7 +114,9 @@ describe("typed storage", () => {
     await expect(storage.get("count")).resolves.toBe(0);
   });
 
-  it("refreshes the in-memory cache when another context changes storage", async () => {
+  it(
+    "refreshes the in-memory cache when another context changes storage",
+    async () => {
     const { area, changes, externalSet, externalRemove } = memoryArea({
       count: 1,
       label: "initial",
@@ -136,5 +138,6 @@ describe("typed storage", () => {
 
     externalRemove("label");
     await expect(storage.get("label")).resolves.toBe("default");
-  });
+    },
+  );
 });
