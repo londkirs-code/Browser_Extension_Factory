@@ -105,6 +105,17 @@ describe("typed storage", () => {
     await expect(storage.get("count")).resolves.toBe(0);
   });
 
+  it("removes the storage change listener when destroyed", async () => {
+    const { area, changes, externalSet } = memoryArea({ count: 1 });
+    const storage = createStorage(area, { defaults: { count: 0 }, version: 1 }, changes);
+
+    await expect(storage.get("count")).resolves.toBe(1);
+    storage.destroy();
+    externalSet({ count: 9 });
+
+    await expect(storage.get("count")).resolves.toBe(1);
+  });
+
   it("refreshes the in-memory cache when another context changes storage", async () => {
     const { area, changes, externalSet, externalRemove } = memoryArea({
       count: 1,
