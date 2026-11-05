@@ -27,6 +27,8 @@ There is no hand-maintained root `manifest.json`. WXT generates one manifest per
 
 The generator creates `extensions/<slug>/`, a unique Gecko ID, placeholder PNG icons, English/Hebrew locale files, store copy, and selected entrypoints. It then runs `pnpm install --no-frozen-lockfile` so the new workspace is ready to build.
 
+**Lockfile rule (mandatory):** after every `pnpm new` run or any dependency change, include the updated root `pnpm-lock.yaml` in the same Git commit as that generator/dependency change. Before pushing, run `pnpm install --frozen-lockfile` and confirm it exits successfully. Never rely on CI to generate, repair, or commit the lockfile.
+
 ## Commands
 
 Run from repository root:
