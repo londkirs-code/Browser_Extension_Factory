@@ -169,7 +169,7 @@ async function validateManifest(
   const policy = csp?.extension_pages ?? "";
   if (
     !policy.includes("script-src 'self'") ||
-    /unsafe-eval|unsafe-inline|https?:\/\//i.test(policy)
+    /['"]unsafe-(?:eval|inline)['"]|https?:\/\//i.test(policy)
   ) {
     throw new Error(browser + ": extension_pages CSP is missing or too permissive.");
   }
