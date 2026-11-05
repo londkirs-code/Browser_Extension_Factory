@@ -105,6 +105,30 @@ run("audit", ["audit"]);
 run("validate", ["validate"]);
 run("validate workflows", ["validate:workflows"]);
 run("build all (Chrome + Firefox, web-ext lint)", ["build:all"]);
+const requestDirectory = path.join(root, ".factory", "requests");
+if (existsSync(requestDirectory)) {
+  const requestedSlugs = new Set(
+    readdirSync(requestDirectory)
+      .filter((file) => file.endsWith(".json"))
+      .map((file) => {
+        try {
+          return String(
+            (JSON.parse(readFileSync(path.join(requestDirectory, file), "utf8")) as {
+              slug?: unknown;
+            }).slug ?? "",
+          );
+        } catch {
+          return "";
+        }
+      })
+      .filter((slug) => /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)),
+  );
+  for (const slug of requestedSlugs) {
+    if (existsSync(path.join(root, "extensions", slug))) {
+      run(`package ${slug} (Chrome + Firefox + source ZIPs)`, ["zip", slug]);
+    }
+  }
+}
 run("frozen install check", ["install", "--frozen-lockfile"]);
 const allPassed = writeReport();
 run("format report", ["exec", "prettier", "--write", ".factory"], { record: false });
