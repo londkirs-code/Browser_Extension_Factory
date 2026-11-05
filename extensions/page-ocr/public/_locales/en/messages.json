@@ -1,20 +1,27 @@
 {
   "extName": {
-    "message": "__DISPLAY_NAME__",
+    "message": "Page OCR",
     "description": "Extension name shown by the browser."
   },
   "extDescription": {
-    "message": "__DESCRIPTION__",
+    "message": "Select an area and copy its Hebrew or English text using local OCR.",
     "description": "Extension description shown by the browser."
   },
-  "popupTitle": { "message": "Extension ready", "description": "Popup title." },
-  "popupBody": {
-    "message": "Add the feature-specific behavior in this project.",
-    "description": "Popup introduction."
+  "selectArea": {
+    "message": "Drag to select an area. Press Esc to cancel.",
+    "description": "Selection overlay instructions."
   },
-  "optionsTitle": { "message": "Options", "description": "Options page title." },
-  "optionsDescription": {
-    "message": "Configure this extension.",
-    "description": "Options page introduction."
-  }
+  "resultTitle": { "message": "Recognized text", "description": "OCR result panel title." },
+  "copyText": { "message": "Copy text", "description": "Copy OCR result button." },
+  "copied": { "message": "Copied to clipboard", "description": "Clipboard success status." },
+  "copyFailed": {
+    "message": "Select the text and copy it manually.",
+    "description": "Clipboard failure status."
+  },
+  "close": { "message": "Close", "description": "Close result panel button." },
+  "noText": {
+    "message": "No readable text was found in that area.",
+    "description": "Shown when OCR returns no text."
+  },
+  "ocrFailed": { "message": "OCR failed: {error}", "description": "OCR error message." }
 }
