@@ -1,7 +1,4 @@
-import {
-  createMessenger,
-  type RuntimeMessagingApi,
-} from "@browser-extension-factory/shared";
+import { createMessenger, type RuntimeMessagingApi } from "@browser-extension-factory/shared";
 import type { PageOcrMessages } from "../../messages.js";
 import { recognizeImage } from "../../ocr/engine.js";
 

@@ -1,7 +1,4 @@
-import {
-  createMessenger,
-  type RuntimeMessagingApi,
-} from "@browser-extension-factory/shared";
+import { createMessenger, type RuntimeMessagingApi } from "@browser-extension-factory/shared";
 import type { PageOcrMessages } from "../messages.js";
 
 type ChromeOffscreenApi = {
@@ -16,9 +13,11 @@ type ChromeOffscreenApi = {
 let offscreenPromise: Promise<void> | undefined;
 
 async function ensureOffscreenDocument(): Promise<void> {
-  const offscreen = (globalThis as typeof globalThis & {
-    chrome?: { offscreen?: ChromeOffscreenApi };
-  }).chrome?.offscreen;
+  const offscreen = (
+    globalThis as typeof globalThis & {
+      chrome?: { offscreen?: ChromeOffscreenApi };
+    }
+  ).chrome?.offscreen;
   if (!offscreen) throw new Error("Chrome offscreen API is unavailable.");
 
   if (!offscreenPromise) {
