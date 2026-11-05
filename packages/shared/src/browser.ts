@@ -11,7 +11,9 @@ export interface StorageChange {
 
 export interface StorageChangeEvent {
   addListener(listener: (changes: Record<string, StorageChange>, areaName: string) => void): void;
-  removeListener?(listener: (changes: Record<string, StorageChange>, areaName: string) => void): void;
+  removeListener?(
+    listener: (changes: Record<string, StorageChange>, areaName: string) => void,
+  ): void;
 }
 
 export interface ExtensionApi {
