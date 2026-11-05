@@ -69,6 +69,10 @@ Run from repository root:
 - Keep `pnpm-workspace.yaml` security overrides reviewed and minimal. The current `minimatch` override enforces the first patched release range for GHSA-g3hv-75wg-m249. Because `web-ext` resolves `multimatch@6.0.0` with a removed minimatch default import, pin that dependency to compatible `multimatch@8.0.0` in `pnpm-workspace.yaml`.
 - The only current audit exception is GHSA-gcqx-w48m-w2h4 for unpatched, build-only `deepmerge` pulled in by `web-ext > addons-linter`. Its rationale is documented beside the ignore entry in `pnpm-workspace.yaml` and in `docs/setup.md`. Remove it when upstream publishes a fix.
 
+## Dependency build-script automation
+
+The Factory Agent workflow discovers pnpm lifecycle scripts before installation. It automatically allows a build script only when the package is a direct dependency declared in a workspace `package.json`, using `tools/approve-direct-builds.ts`. This removes the need for a separate user approval for ordinary direct dependency additions. Unknown transitive build scripts remain blocked and must be reviewed and explicitly listed in `pnpm-workspace.yaml` under `allowBuilds`; never enable all dependency build scripts globally.
+
 ## Shared package expectations
 
 Use `packages/shared` for:
