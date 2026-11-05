@@ -43,6 +43,7 @@ jobs:
           name: factory-extension-packages
           path: extensions/*/.output/*.zip
           if-no-files-found: error
+          include-hidden-files: true
           retention-days: 14
       - name: Commit generated files, lockfile, formatting and report to this branch
         if: always()
