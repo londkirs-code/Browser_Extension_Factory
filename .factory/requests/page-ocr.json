@@ -1,0 +1,17 @@
+{
+  "slug": "page-ocr",
+  "name": "Page OCR",
+  "description": "Select an area of the page and copy its Hebrew/English text to the clipboard using local OCR.",
+  "permissions": ["activeTab", "scripting", "clipboardWrite"],
+  "optional-permissions": [],
+  "host-permissions": [],
+  "optional-host-permissions": [],
+  "content-matches": [],
+  "firefox-data-collection-required": ["none"],
+  "firefox-data-collection-optional": [],
+  "popup": false,
+  "options": false,
+  "content-script": false,
+  "background": true,
+  "broad-justification": "Copies the recognized text to the clipboard only after the user selects an area."
+}
