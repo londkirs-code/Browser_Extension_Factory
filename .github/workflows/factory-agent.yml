@@ -27,6 +27,8 @@ jobs:
       - uses: pnpm/action-setup@v6
         with:
           version: 12.16.1
+      - name: Install dependencies and sync the lockfile
+        run: pnpm install --no-frozen-lockfile
       - name: Run factory pipeline
         run: pnpm exec tsx tools/factory-run.ts
       - name: Commit generated files, lockfile, formatting and report to this branch
@@ -38,5 +40,6 @@ jobs:
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
             git add --all
             git commit -m "chore(factory): automated scaffold, lockfile, format and report"
+            git pull --rebase -X ours origin "${GITHUB_REF_NAME}"
             git push origin "HEAD:${GITHUB_REF_NAME}"
           fi
