@@ -45,7 +45,7 @@ export default defineContentScript({
           position: fixed; top: 18px; left: 50%; transform: translateX(-50%);
           max-width: calc(100vw - 32px); padding: 9px 14px;
           border-radius: 8px; background: #172033; color: white;
-          font: 14px/1.4 system-ui, sans-serif; direction: ${rtl ? "rtl" : "ltr"};
+          font: 14px/1.4 system-ui, sans-serif; direction: ltr;
           box-shadow: 0 4px 18px rgba(0,0,0,.25); white-space: nowrap;
         }
       </style>
@@ -58,6 +58,7 @@ export default defineContentScript({
     const selectionElement = shadow.querySelector<HTMLDivElement>(".selection")!;
     const hint = shadow.querySelector<HTMLDivElement>(".hint")!;
     hint.textContent = localize("selectArea", "Drag to select an area. Press Esc to cancel.");
+    hint.dir = rtl ? "rtl" : "ltr";
     document.documentElement.append(host);
 
     let startX = 0;
