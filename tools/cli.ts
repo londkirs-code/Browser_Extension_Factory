@@ -77,6 +77,16 @@ async function buildOne(slug: string): Promise<void> {
   console.log("Building " + slug + " for Chrome/Chromium and Firefox.");
   runWxt(slug, ["build", "-b", "chrome", "--mv3"]);
   runWxt(slug, ["build", "-b", "firefox", "--mv3"]);
+  if (slug === "page-ocr") {
+    const firefoxOutput = path.join(directory, ".output", "firefox-mv3");
+    for (const relativePath of ["background.js", "vendor/ocr/worker.min.js"]) {
+      const source = await readFile(path.join(firefoxOutput, relativePath), "utf8");
+      console.log(
+        "OCR CSP scan " + relativePath + ":",
+        source.match(/.{0,100}Function.{0,100}/g) ?? [],
+      );
+    }
+  }
   await validateExtension(slug, { requireBuilt: true });
   const firefoxOutput = path.join(directory, ".output", "firefox-mv3");
   runPnpm(["exec", "web-ext", "lint", "--source-dir", firefoxOutput, "--warnings-as-errors"]);
