@@ -79,6 +79,31 @@ async function patchBuiltOcrFallbacks(): Promise<void> {
   }
 }
 
+async function assertChromeOffscreenRunListener(): Promise<void> {
+  const chunksDirectory = path.join(
+    fileURLToPath(new URL("./.output", import.meta.url)),
+    "chrome-mv3",
+    "chunks",
+  );
+  const chunkFiles = (await readdir(chunksDirectory)).filter(
+    (file) => /^offscreen-.*\\.js$/.test(file),
+  );
+  if (!chunkFiles.length) {
+    throw new Error(
+      "Page OCR build verification failed: no chunks/offscreen-*.js files were emitted for chrome-mv3.",
+    );
+  }
+
+  const chunks = await Promise.all(
+    chunkFiles.map((file) => readFile(path.join(chunksDirectory, file), "utf8")),
+  );
+  if (!chunks.some((source) => source.includes("page-ocr:run"))) {
+    throw new Error(
+      "Page OCR build verification failed: no chrome-mv3 chunks/offscreen-*.js file contains the page-ocr:run listener.",
+    );
+  }
+}
+
 async function copyOcrAssets(): Promise<void> {
   const target = fileURLToPath(new URL("./public/vendor/ocr", import.meta.url));
   const coreTarget = path.join(target, "core");
@@ -124,6 +149,7 @@ export default defineConfig({
     },
     "build:done": async () => {
       await patchBuiltOcrFallbacks();
+      await assertChromeOffscreenRunListener();
     },
   },
   manifest: ({ browser }) => ({

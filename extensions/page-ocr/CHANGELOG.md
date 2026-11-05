@@ -7,7 +7,7 @@ All notable changes to this extension are documented here.
 ### Fixed
 
 - Declare the Manifest V3 toolbar action so clicking the extension icon works in Chrome and Firefox.
-- Register the Chrome offscreen OCR message handlers when the page module loads and wait for them to become ready before sending OCR requests.
+- Register the Chrome offscreen OCR message handler from the page module and verify that the built Chrome offscreen chunk contains it. Retry message delivery while the offscreen page initializes.
 - Explicitly allow local extension workers in the extension-page content security policy for Firefox.
 
 ### Added

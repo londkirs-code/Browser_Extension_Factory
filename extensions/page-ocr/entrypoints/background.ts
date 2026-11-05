@@ -39,22 +39,6 @@ export default defineBackground(() => {
           });
         }
 
-        // createDocument() can resolve before the page's module has registered
-        // its message listeners. Wait for an explicit ready response instead
-        // of sending the OCR request into an uninitialized document.
-        let lastError: unknown;
-        for (let attempt = 0; attempt < 40; attempt += 1) {
-          try {
-            const response = await messenger.send("page-ocr:ready", {});
-            if (response.ready) return;
-          } catch (error) {
-            lastError = error;
-          }
-          await delay(100);
-        }
-
-        const detail = lastError instanceof Error ? `: ${lastError.message}` : "";
-        throw new Error(`OCR offscreen document did not become ready${detail}`);
       })().catch((error: unknown) => {
         offscreenPromise = undefined;
         throw error;
@@ -95,7 +79,17 @@ export default defineBackground(() => {
   messenger.on("page-ocr:recognize", async ({ imageDataUrl }) => {
     if (import.meta.env.BROWSER === "chrome") {
       await ensureOffscreenDocument();
-      return messenger.send("page-ocr:run", { imageDataUrl });
+      let lastError: unknown;
+      for (let attempt = 0; attempt < 40; attempt += 1) {
+        try {
+          return await messenger.send("page-ocr:run", { imageDataUrl });
+        } catch (error) {
+          lastError = error;
+          await delay(100);
+        }
+      }
+      const detail = lastError instanceof Error ? `: ${lastError.message}` : "";
+      throw new Error(`OCR offscreen listener did not become available${detail}`);
     }
     const { recognizeImage } = await import("../ocr/engine.js");
     return { text: await recognizeImage(imageDataUrl) };
