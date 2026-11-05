@@ -1,4 +1,4 @@
-import { access, readFile, readdir, rm, stat, copyFile, writeFile } from "node:fs/promises";
+import { access, readFile, readdir, rm, stat, copyFile } from "node:fs/promises";
 import path from "node:path";
 import process from "node:process";
 import { spawnSync } from "node:child_process";
@@ -77,47 +77,9 @@ async function buildOne(slug: string): Promise<void> {
   console.log("Building " + slug + " for Chrome/Chromium and Firefox.");
   runWxt(slug, ["build", "-b", "chrome", "--mv3"]);
   runWxt(slug, ["build", "-b", "firefox", "--mv3"]);
-  if (slug === "page-ocr") {
-    for (const browser of ["chrome", "firefox"]) {
-      const browserOutput = path.join(
-        directory,
-        ".output",
-        browser === "chrome" ? "chrome-mv3" : "firefox-mv3",
-      );
-      for (const relativePath of ["background.js", "vendor/ocr/worker.min.js"]) {
-        const filePath = path.join(browserOutput, relativePath);
-        const source = await readFile(filePath, "utf8");
-        let patchedFallbacks = 0;
-        const safeSource = source.replace(
-          /Function\(["']r["']\s*,\s*["']regeneratorRuntime = r["']\)\(([A-Za-z_$][\w$]*)\)/g,
-          (_match, runtimeVariable: string) => {
-            patchedFallbacks += 1;
-            return "globalThis.regeneratorRuntime = " + runtimeVariable + ";";
-          },
-        );
-        if (patchedFallbacks) await writeFile(filePath, safeSource);
-        console.log(
-          "Patched regenerator fallbacks in " + browser + "/" + relativePath + ": " + patchedFallbacks,
-        );
-      }
-    }
-  }
   await validateExtension(slug, { requireBuilt: true });
   const firefoxOutput = path.join(directory, ".output", "firefox-mv3");
-  try {
-    runPnpm(["exec", "web-ext", "lint", "--source-dir", firefoxOutput, "--warnings-as-errors"]);
-  } catch (error) {
-    if (slug === "page-ocr") {
-      for (const relativePath of ["background.js", "vendor/ocr/worker.min.js"]) {
-        const source = await readFile(path.join(firefoxOutput, relativePath), "utf8");
-        console.error(
-          "Remaining OCR CSP tokens in " + relativePath + ":",
-          source.match(/.{0,100}Function.{0,100}/g) ?? [],
-        );
-      }
-    }
-    throw error;
-  }
+  runPnpm(["exec", "web-ext", "lint", "--source-dir", firefoxOutput, "--warnings-as-errors"]);
   for (const browser of ["chrome", "firefox"]) {
     const output = path.join(
       directory,
