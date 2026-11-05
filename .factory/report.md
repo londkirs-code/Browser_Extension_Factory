@@ -1,7 +1,7 @@
 # Factory run report
 
 Overall: FAILED
-Commit before run: 5196e09a312ef2bde41b79e22066429622afd2eb
+Commit before run: 31cd3b91c1bc0841c1c1c50597950b01718de4bd
 
 | Step                                       | Result |
 | ------------------------------------------ | ------ |
@@ -17,8 +17,8 @@ Commit before run: 5196e09a312ef2bde41b79e22066429622afd2eb
 ## Failure: build all (Chrome + Firefox, web-ext lint)
 
 ```
-  ├─ .output/chrome-mv3/_locales/en/messages.json                                660 B
-  ├─ .output/chrome-mv3/_locales/he/messages.json                                719 B
+  ├─ .output/chrome-mv3/_locales/en/messages.json                                1.12 kB
+  ├─ .output/chrome-mv3/_locales/he/messages.json                                1.43 kB
   ├─ .output/chrome-mv3/icon.svg                                                 341 B
   ├─ .output/chrome-mv3/icons/128.png                                            2.06 kB
   ├─ .output/chrome-mv3/icons/16.png                                             360 B
@@ -32,8 +32,8 @@ Commit before run: 5196e09a312ef2bde41b79e22066429622afd2eb
   ├─ .output/chrome-mv3/vendor/ocr/core/tesseract-core.wasm                      3.45 MB
   ├─ .output/chrome-mv3/vendor/ocr/lang/eng.traineddata.gz                       2.95 MB
   └─ .output/chrome-mv3/vendor/ocr/lang/heb.traineddata.gz                       580.58 kB
-Σ Total size: 48.92 MB
-[success] Finished in 569 ms
+Σ Total size: 48.93 MB
+[success] Finished in 821 ms
 [log]
 WXT 0.21.5
 [info] Building firefox-mv3 for production with Vite 8.3.5
@@ -42,11 +42,13 @@ WXT 0.21.5
 ⠋ [1/2] background[K
 ⠋ [2/2] content[K
 ⠙ [2/2] content[K
+⠹ [2/2] content[K
+⠸ [2/2] content[K
 [K[?25h
-[K[?25h[success] Built extension in 226 ms
+[K[?25h[success] Built extension in 360 ms
   ├─ .output/firefox-mv3/manifest.json                                            701 B
   ├─ .output/firefox-mv3/background.js                                            20.02 kB
-  ├─ .output/firefox-mv3/content-scripts/content.js                               7.88 kB
+  ├─ .output/firefox-mv3/content-scripts/content.js                               11.21 kB
   ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core-lstm.js                   89.26 kB
   ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core-lstm.wasm.js              3.90 MB
   ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core-relaxedsimd-lstm.js       89.36 kB
@@ -60,8 +62,8 @@ WXT 0.21.5
   ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core.js                        88.97 kB
   ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core.wasm.js                   4.69 MB
   ├─ .output/firefox-mv3/vendor/ocr/worker.min.js                                 111.31 kB
-  ├─ .output/firefox-mv3/_locales/en/messages.json                                660 B
-  ├─ .output/firefox-mv3/_locales/he/messages.json                                719 B
+  ├─ .output/firefox-mv3/_locales/en/messages.json                                1.12 kB
+  ├─ .output/firefox-mv3/_locales/he/messages.json                                1.43 kB
   ├─ .output/firefox-mv3/icon.svg                                                 341 B
   ├─ .output/firefox-mv3/icons/128.png                                            2.06 kB
   ├─ .output/firefox-mv3/icons/16.png                                             360 B
@@ -75,8 +77,8 @@ WXT 0.21.5
   ├─ .output/firefox-mv3/vendor/ocr/core/tesseract-core.wasm                      3.45 MB
   ├─ .output/firefox-mv3/vendor/ocr/lang/eng.traineddata.gz                       2.95 MB
   └─ .output/firefox-mv3/vendor/ocr/lang/heb.traineddata.gz                       580.58 kB
-Σ Total size: 48.92 MB
-[success] Finished in 530 ms
+Σ Total size: 48.93 MB
+[success] Finished in 700 ms
 $ tsx tools/cli.ts build-all
 [warn] The following entrypoints have been skipped:
 - offscreen

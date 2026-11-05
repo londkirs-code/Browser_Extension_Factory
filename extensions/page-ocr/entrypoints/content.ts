@@ -231,12 +231,7 @@ export default defineContentScript({
         );
       } catch (error) {
         const detail = error instanceof Error ? error.message : String(error);
-        showResult(
-          "",
-          rtl,
-          `${localize("ocrFailed", "OCR failed")}: ${detail}`,
-          labels,
-        );
+        showResult("", rtl, `${localize("ocrFailed", "OCR failed")}: ${detail}`, labels);
       }
     };
 
