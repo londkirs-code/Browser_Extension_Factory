@@ -38,7 +38,6 @@ export default defineBackground(() => {
             justification: "Run the bundled local OCR engine outside the service worker.",
           });
         }
-
       })().catch((error: unknown) => {
         offscreenPromise = undefined;
         throw error;
