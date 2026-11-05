@@ -127,6 +127,7 @@ export default defineConfig({
     },
   },
   manifest: ({ browser }) => ({
+    action: { default_title: config.displayName },
     name: "__MSG_extName__",
     description: "__MSG_extDescription__",
     default_locale: "en",
