@@ -1,10 +1,10 @@
 # Store screenshot plan
 
-Prepare current screenshots of:
+Capture the production UI with personal information removed:
 
-1. The main popup or primary extension UI.
-2. Each options/settings page included in the build.
-3. A representative webpage showing any content-script behavior.
-4. Any onboarding or permission prompt needed to explain the extension.
+1. The area-selection overlay on a page containing readable text.
+2. The result panel showing recognized English text and the Copy text button.
+3. The result panel showing recognized Hebrew text in right-to-left layout.
+4. The no-text or OCR-error state, if it is useful to explain recovery.
 
-Use real production UI, remove personal data, and ensure screenshots match the submitted version.
+There is no popup or settings page. Screenshots must match the submitted version and show the toolbar action that starts selection.
