@@ -21,6 +21,8 @@ pnpm new
 
 המחולל מעתיק את `templates/basic-extension/`, יוצר Gecko ID ייחודי, משנה את package name, יוצר אייקוני PNG מ־`public/icon.svg`, משאיר רק את ה־entrypoints שנבחרו ומריץ `pnpm install --no-frozen-lockfile`. לכן אפשר לעבור ישירות לבנייה.
 
+**חשוב — עדכון קובץ הנעילה:** `pnpm new` משנה את `pnpm-lock.yaml`. חובה לכלול את הקובץ המעודכן באותו commit שבו נוצר התוסף. אותו כלל חל על כל שינוי בתלויות: יש לעדכן ולבצע commit ל־`pnpm-lock.yaml` יחד עם השינוי. לפני הדחיפה יש להריץ `pnpm install --frozen-lockfile` ולוודא שהפקודה מסתיימת בהצלחה. ה־CI משתמש בקובץ הנעילה הקיים בלבד ולא יעדכן אותו עבורך.
+
 ## פרמטרים לאשף
 
 אפשר להריץ ללא אינטראקציה:
