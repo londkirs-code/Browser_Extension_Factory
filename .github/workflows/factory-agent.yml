@@ -31,6 +31,14 @@ jobs:
         run: pnpm install --no-frozen-lockfile
       - name: Run factory pipeline
         run: pnpm exec tsx tools/factory-run.ts
+      - name: Upload extension ZIP packages
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: factory-extension-packages
+          path: extensions/*/.output/**/*.zip
+          if-no-files-found: error
+          retention-days: 14
       - name: Commit generated files, lockfile, formatting and report to this branch
         if: always()
         shell: bash
