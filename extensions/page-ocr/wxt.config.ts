@@ -42,7 +42,7 @@ function resolvePackageRoot(packageName: string): string {
   }
 }
 
-async function patchRegeneratorFallbacks(filePath: string): Promise<void> {
+async function patchUnsafeFunctionConstructors(filePath: string): Promise<void> {
   let source: string;
   try {
     source = await readFile(filePath, "utf8");
@@ -52,13 +52,21 @@ async function patchRegeneratorFallbacks(filePath: string): Promise<void> {
   }
 
   let patched = 0;
-  const safeSource = source.replace(
-    /Function\(["']r["']\s*,\s*["']regeneratorRuntime = r["']\)\(([A-Za-z_$][\w$]*)\)/g,
+  let safeSource = source.replace(
+    /Function\((["'\x60])r\1\s*,\s*(["'\x60])regeneratorRuntime = r\2\)\(([A-Za-z_$][\w$]*)\)/g,
     (_match, runtimeVariable: string) => {
       patched += 1;
       return "globalThis.regeneratorRuntime = " + runtimeVariable + ";";
     },
   );
+  safeSource = safeSource.replace(/new Function\((["'\x60])return this\1\)\(\)/g, () => {
+    patched += 1;
+    return "globalThis";
+  });
+
+  if (/\bFunction\s*\(/.test(safeSource)) {
+    throw new Error("Unexpected Function constructor remains in " + filePath);
+  }
   if (patched) await writeFile(filePath, safeSource);
 }
 
@@ -66,7 +74,7 @@ async function patchBuiltOcrFallbacks(): Promise<void> {
   const outputRoot = fileURLToPath(new URL("./.output", import.meta.url));
   for (const browser of ["chrome-mv3", "firefox-mv3"]) {
     for (const relativePath of ["background.js", "vendor/ocr/worker.min.js"]) {
-      await patchRegeneratorFallbacks(path.join(outputRoot, browser, relativePath));
+      await patchUnsafeFunctionConstructors(path.join(outputRoot, browser, relativePath));
     }
   }
 }
@@ -81,22 +89,6 @@ async function copyOcrAssets(): Promise<void> {
   const tesseractRoot = resolvePackageRoot("tesseract.js");
   const workerTarget = path.join(target, "worker.min.js");
   await copyFile(path.join(tesseractRoot, "dist", "worker.min.js"), workerTarget);
-
-  // regenerator-runtime uses Function(...) only as a strict-mode fallback.
-  // Assigning the same runtime on globalThis preserves behavior without eval-like code.
-  const workerSource = await readFile(workerTarget, "utf8");
-  let patchedFallbacks = 0;
-  const safeWorkerSource = workerSource.replace(
-    /Function\(["']r["']\s*,\s*["']regeneratorRuntime = r["']\)\(([A-Za-z_$][\w$]*)\)/g,
-    (_match, runtimeVariable: string) => {
-      patchedFallbacks += 1;
-      return "globalThis.regeneratorRuntime = " + runtimeVariable + ";";
-    },
-  );
-  if (patchedFallbacks === 0) {
-    throw new Error("The expected regenerator-runtime fallback was not found in worker.min.js.");
-  }
-  await writeFile(workerTarget, safeWorkerSource);
 
   const coreRoot = resolvePackageRoot("tesseract.js-core");
   const coreFiles = (await readdir(coreRoot)).filter(
