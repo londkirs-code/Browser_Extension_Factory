@@ -58,17 +58,13 @@ async function copyOcrAssets(): Promise<void> {
   const workerSource = await readFile(workerTarget, "utf8");
   let patchedFallbacks = 0;
   const safeWorkerSource = workerSource.replace(
-    /Function\((['"])r\1\s*,\s*(['"])regeneratorRuntime = r\2\)\(runtime\);?/g,
-    () => {
+    /Function\(["']r["']\s*,\s*["']regeneratorRuntime = r["']\)\(([A-Za-z_$][\w$]*)\)/g,
+    (_match, runtimeVariable: string) => {
       patchedFallbacks += 1;
-      return "globalThis.regeneratorRuntime = runtime;";
+      return "globalThis.regeneratorRuntime = " + runtimeVariable + ";";
     },
   );
   if (patchedFallbacks === 0) {
-    console.error(
-      "Tesseract worker Function snippets:",
-      workerSource.match(/.{0,100}Function.{0,100}/g) ?? [],
-    );
     throw new Error("The expected regenerator-runtime fallback was not found in worker.min.js.");
   }
   await writeFile(workerTarget, safeWorkerSource);
