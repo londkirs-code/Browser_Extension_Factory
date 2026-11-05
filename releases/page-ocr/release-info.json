@@ -2,18 +2,18 @@
   "slug": "page-ocr",
   "displayName": "Page OCR",
   "version": "0.1.0",
-  "builtAt": "2026-11-05T06:35:20.873Z",
-  "commitSha": "11637e8ce5fccddd76baedda79bdc2d28677da76",
+  "builtAt": "2026-11-05T06:49:29.610Z",
+  "commitSha": "60b7a816def74dcf0d2bb15be7a5b17c3dd4ad20",
   "files": {
     "chrome": {
       "name": "page-ocr-0.1.0-chrome.zip",
-      "size": 20482086,
-      "sha256": "7ead0c43e1abf9bd70bb851dfc3252904243a84a4d7f09d525bfcf5689fb0a6f"
+      "size": 20482598,
+      "sha256": "411ce700b813d64417358581bceb4d96a22b8ee4598762b234c398dbc6914c4a"
     },
     "firefox": {
       "name": "page-ocr-0.1.0-firefox.zip",
-      "size": 20481207,
-      "sha256": "65f754153d92882d5ee7dbd5ce1756f664f2fc226cbb18b7fee2b0bddedbe7b6"
+      "size": 20481215,
+      "sha256": "6c3ce86f1928f8ecb9ec78af1f42ccb50624dcc96fb528918281e0a61d0da070"
     }
   }
 }

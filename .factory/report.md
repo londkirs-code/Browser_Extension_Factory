@@ -1,7 +1,7 @@
 # Factory run report
 
 Overall: ALL CHECKS PASSED
-Commit before run: 11637e8ce5fccddd76baedda79bdc2d28677da76
+Commit before run: 60b7a816def74dcf0d2bb15be7a5b17c3dd4ad20
 
 | Step                                       | Result |
 | ------------------------------------------ | ------ |
