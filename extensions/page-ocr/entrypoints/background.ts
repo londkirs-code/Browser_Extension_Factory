@@ -1,5 +1,42 @@
-import { createMessenger, type RuntimeMessagingApi } from "@browser-extension-factory/shared";
+import {
+  createMessenger,
+  type RuntimeMessagingApi,
+} from "@browser-extension-factory/shared";
 import type { PageOcrMessages } from "../messages.js";
+
+type ChromeOffscreenApi = {
+  hasDocument(): Promise<boolean>;
+  createDocument(options: {
+    url: string;
+    reasons: ["WORKERS"];
+    justification: string;
+  }): Promise<void>;
+};
+
+let offscreenPromise: Promise<void> | undefined;
+
+async function ensureOffscreenDocument(): Promise<void> {
+  const offscreen = (globalThis as typeof globalThis & {
+    chrome?: { offscreen?: ChromeOffscreenApi };
+  }).chrome?.offscreen;
+  if (!offscreen) throw new Error("Chrome offscreen API is unavailable.");
+
+  if (!offscreenPromise) {
+    offscreenPromise = (async () => {
+      if (!(await offscreen.hasDocument())) {
+        await offscreen.createDocument({
+          url: "offscreen.html",
+          reasons: ["WORKERS"],
+          justification: "Run the bundled local OCR engine outside the service worker.",
+        });
+      }
+    })().catch((error: unknown) => {
+      offscreenPromise = undefined;
+      throw error;
+    });
+  }
+  await offscreenPromise;
+}
 
 export default defineBackground(() => {
   const messenger = createMessenger<PageOcrMessages>(
@@ -32,5 +69,14 @@ export default defineBackground(() => {
         error: error instanceof Error ? error.message : "Unable to capture this tab.",
       };
     }
+  });
+
+  messenger.on("page-ocr:recognize", async ({ imageDataUrl }) => {
+    if (import.meta.env.BROWSER === "chrome") {
+      await ensureOffscreenDocument();
+      return messenger.send("page-ocr:run", { imageDataUrl });
+    }
+    const { recognizeImage } = await import("../ocr/engine.js");
+    return { text: await recognizeImage(imageDataUrl) };
   });
 });

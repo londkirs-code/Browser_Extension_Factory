@@ -9,4 +9,8 @@ export type PageOcrMessages = {
     request: { imageDataUrl: string };
     response: { text: string };
   };
+  "page-ocr:run": {
+    request: { imageDataUrl: string };
+    response: { text: string };
+  };
 };
