@@ -1,7 +1,7 @@
 # Factory run report
 
 Overall: FAILED
-Commit before run: d26be90a68fd7fb79e2ab9d09dd29ccbab595484
+Commit before run: 93529731764d381bb27dbc469736974f9a4bf28d
 
 | Step                                              | Result |
 | ------------------------------------------------- | ------ |
@@ -24,7 +24,7 @@ Commit before run: d26be90a68fd7fb79e2ab9d09dd29ccbab595484
   ├─ .output/firefox-mv3/vendor/ocr/lang/eng.traineddata.gz                       2.95 MB
   └─ .output/firefox-mv3/vendor/ocr/lang/heb.traineddata.gz                       580.58 kB
 Σ Total size: 48.93 MB
-[success] Finished in 388 ms
+[success] Finished in 563 ms
 Validation Summary:
 
 errors          2
@@ -44,7 +44,7 @@ JS_SYNTAX_ERROR   JavaScript    There is a JavaScript    background…   1
                   token $ at    official part of the
                   line: 1 and   language specification
                   column:       and therefore not
-                  7847)         supported yet. The
+                  7846)         supported yet. The
                   (Parsing as   validation cannot
                   script        continue on this file.
                   error:
@@ -52,7 +52,7 @@ JS_SYNTAX_ERROR   JavaScript    There is a JavaScript    background…   1
                   token $ at
                   line: 1 and
                   column:
-                  7847)
+                  7846)
 JS_SYNTAX_ERROR   JavaScript    There is a JavaScript    vendor/ocr…   2
                   syntax        syntax error in your     /worker.mi…
                   error         code, which might be     n.js
@@ -63,7 +63,7 @@ JS_SYNTAX_ERROR   JavaScript    There is a JavaScript    vendor/ocr…   2
                   token use     official part of the
                   at line: 2    language specification
                   and column:   and therefore not
-                  6961)         supported yet. The
+                  6960)         supported yet. The
                   (Parsing as   validation cannot
                   script        continue on this file.
                   error:
@@ -71,7 +71,7 @@ JS_SYNTAX_ERROR   JavaScript    There is a JavaScript    vendor/ocr…   2
                   token use
                   at line: 2
                   and column:
-                  6961)
+                  6960)
 $ tsx tools/cli.ts build-all
 [warn] The following entrypoints have been skipped:
 - offscreen
@@ -89,7 +89,7 @@ Command failed (1): pnpm exec web-ext lint --source-dir /home/runner/work/Browse
   ├─ .output/firefox-mv3/vendor/ocr/lang/eng.traineddata.gz                       2.95 MB
   └─ .output/firefox-mv3/vendor/ocr/lang/heb.traineddata.gz                       580.58 kB
 Σ Total size: 48.93 MB
-[success] Finished in 392 ms
+[success] Finished in 562 ms
 Validation Summary:
 
 errors          2
@@ -109,7 +109,7 @@ JS_SYNTAX_ERROR   JavaScript    There is a JavaScript    background…   1
                   token $ at    official part of the
                   line: 1 and   language specification
                   column:       and therefore not
-                  7847)         supported yet. The
+                  7846)         supported yet. The
                   (Parsing as   validation cannot
                   script        continue on this file.
                   error:
@@ -117,7 +117,7 @@ JS_SYNTAX_ERROR   JavaScript    There is a JavaScript    background…   1
                   token $ at
                   line: 1 and
                   column:
-                  7847)
+                  7846)
 JS_SYNTAX_ERROR   JavaScript    There is a JavaScript    vendor/ocr…   2
                   syntax        syntax error in your     /worker.mi…
                   error         code, which might be     n.js
@@ -128,7 +128,7 @@ JS_SYNTAX_ERROR   JavaScript    There is a JavaScript    vendor/ocr…   2
                   token use     official part of the
                   at line: 2    language specification
                   and column:   and therefore not
-                  6961)         supported yet. The
+                  6960)         supported yet. The
                   (Parsing as   validation cannot
                   script        continue on this file.
                   error:
@@ -136,7 +136,7 @@ JS_SYNTAX_ERROR   JavaScript    There is a JavaScript    vendor/ocr…   2
                   token use
                   at line: 2
                   and column:
-                  6961)
+                  6960)
 $ tsx tools/cli.ts zip page-ocr
 [warn] The following entrypoints have been skipped:
 - offscreen
